@@ -6,6 +6,9 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Blog from './pages/BlogForm';
+import BlogItem from './pages/BlogItem';
+import BlogList from './pages/BlogList';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -32,7 +35,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
-          <Route path="/register" element={<Register darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} /> 
+          <Route path="/register" element={<Register darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+          <Route path="/create-blog" element={<Blog darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}></Route> 
           <Route path="*" element={<NotFound darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
         </Routes>
       </Router>
