@@ -1,15 +1,15 @@
-// import React from 'react';
+import React from 'react';
 import HomePage from './pages/Home';
-import { AuthContext } from './contexts/AuthContext';
-import ThemeContext from './contexts/ThemeContext';
+import { AuthProvider } from './contexts/AuthContext'; // Correct import of AuthProvider
+import { ThemeProvider } from './contexts/ThemeContext'; // Correct import of ThemeProvider
 
 function App() {
   return (
-    <AuthContext>
-      <ThemeContext>
+    <AuthProvider> {/* Use AuthProvider here */}
+      <ThemeProvider> {/* Use ThemeProvider here */}
         <HomePage />
-      </ThemeContext>
-    </AuthContext>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 
