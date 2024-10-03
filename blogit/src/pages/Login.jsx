@@ -1,16 +1,39 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Box, Button, TextField, Typography, IconButton, Switch } from '@mui/material';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../contexts/AuthContext';  // Assuming AuthContext is in this path
 
 const Login = ({ darkMode, toggleDarkMode }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { login } = useContext(AuthContext);  // Get the login function from AuthContext
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here
+
+    // Here you should add your login API call logic
+    try {
+      const response = await fetch('http://localhost:3000/user/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        login(data.token, data.expiresIn);  // Call login from AuthContext
+        navigate('/dashboard');  // Redirect after successful login
+      } else {
+        alert('Invalid credentials');
+      }
+    } catch (error) {
+      console.error('Login error', error);
+    }
   };
 
   return (
@@ -53,7 +76,14 @@ const Login = ({ darkMode, toggleDarkMode }) => {
           type="submit"
           variant="contained"
           fullWidth
-          sx={{ mb: 2, backgroundColor: darkMode ? '#fff' : '#000', color: darkMode ? '#000' : '#fff' }}
+          sx={{
+            mb: 2,
+            backgroundColor: darkMode ? '#fff' : '#000',
+            color: darkMode ? '#000' : '#fff',
+            '&:hover': {
+              backgroundColor: darkMode ? '#f0f0f0' : '#333',
+            },
+          }}
         >
           Login
         </Button>
@@ -62,12 +92,12 @@ const Login = ({ darkMode, toggleDarkMode }) => {
         </Typography>
       </Box>
 
-      {/* <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', mt: 4 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', mt: 4 }}>
         <IconButton onClick={toggleDarkMode} sx={{ color: darkMode ? '#fff' : '#000' }}>
           {darkMode ? <LightModeIcon /> : <DarkModeIcon />}
         </IconButton>
         <Switch checked={darkMode} onChange={toggleDarkMode} />
-      </Box> */}
+      </Box>
     </Box>
   );
 };

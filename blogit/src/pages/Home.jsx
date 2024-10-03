@@ -33,7 +33,7 @@ const HomePage = () => {
 
   return (
     <>
-      <NavBar /> {/* Add the NavBar at the top */}
+      {/* <NavBar /> Add the NavBar at the top */}
       <Container
         maxWidth="lg"
         sx={{
