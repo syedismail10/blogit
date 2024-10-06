@@ -3,36 +3,84 @@ import { Box, Button, TextField, Typography, IconButton, Switch } from '@mui/mat
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../contexts/AuthContext';  // Assuming AuthContext is in this path
+import { AuthContext } from '../contexts/AuthContext'; // Assuming AuthContext is in this path
 
 const Login = ({ darkMode, toggleDarkMode }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useContext(AuthContext);  // Get the login function from AuthContext
+  const [otp, setOtp] = useState(''); // State for OTP
+  const [isOtpSent, setIsOtpSent] = useState(false); // Track if OTP is sent
+  const { login } = useContext(AuthContext); // Get the login function from AuthContext
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Here you should add your login API call logic
     try {
-      const response = await fetch('http://localhost:3000/user/login', {
+        const response = await fetch('http://localhost:3000/user/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+        });
+
+        // Check the response status
+        if (response.ok) {
+            const res = await response.json();
+            if (res.data.verified) {
+                // User is verified, proceed with login
+                login(res.data.token); // Call login from AuthContext
+                navigate('/dashboard'); // Redirect after successful login
+            } else {
+                // User is not verified, show OTP input
+                setIsOtpSent(true);
+            }
+        } else {
+            // Handle specific status codes
+            if (response.status === 401) {
+                alert('Invalid credentials. Please check your email and password.');
+            } else if (response.status === 400) {
+                alert('Bad request. Please verify your input.');
+            } else if (response.status ===310) {
+              setIsOtpSent(true);
+            } else {
+              alert('An error occurred. Please try again later.');
+          }
+        }
+    } catch (error) {
+        console.error('Login error', error);
+        alert('An error occurred while logging in. Please try again later.');
+    }
+};
+
+
+  const handleOtpSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch('http://localhost:3000/user/verify-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, otp }), // Send OTP for verification
       });
 
       if (response.ok) {
-        const data = await response.json();
-        login(data.token, data.expiresIn);  // Call login from AuthContext
-        navigate('/dashboard');  // Redirect after successful login
+        const res = await response.json();
+        if (res.data.message === 'User already verified') {
+          // If OTP verification is successful, log the user in
+          // login(res.data.token); // Call login from AuthContext
+          navigate('/dashboard'); // Redirect after successful login
+        } else {
+          alert('Invalid OTP. Please try again.'); // Handle invalid OTP
+        }
       } else {
-        alert('Invalid credentials');
+        alert('OTP verification failed.');
       }
     } catch (error) {
-      console.error('Login error', error);
+      console.error('OTP verification error', error);
     }
   };
 
@@ -53,7 +101,7 @@ const Login = ({ darkMode, toggleDarkMode }) => {
       <Typography variant="h4" sx={{ mb: 3 }}>
         Login
       </Typography>
-      <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%', maxWidth: '400px' }}>
+      <Box component="form" onSubmit={isOtpSent ? handleOtpSubmit : handleSubmit} sx={{ width: '100%', maxWidth: '400px' }}>
         <TextField
           label="Email"
           type="email"
@@ -72,6 +120,17 @@ const Login = ({ darkMode, toggleDarkMode }) => {
           required
           sx={{ mb: 3 }}
         />
+        {isOtpSent && (
+          <TextField
+            label="Enter OTP"
+            type="text"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            fullWidth
+            required
+            sx={{ mb: 3 }}
+          />
+        )}
         <Button
           type="submit"
           variant="contained"
@@ -85,7 +144,7 @@ const Login = ({ darkMode, toggleDarkMode }) => {
             },
           }}
         >
-          Login
+          {isOtpSent ? 'Verify OTP' : 'Login'}
         </Button>
         <Typography>
           Don't have an account? <Link to="/register">Register</Link>

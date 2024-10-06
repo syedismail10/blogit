@@ -1,35 +1,11 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
-import { Switch, Container, Typography, Button, Box } from '@mui/material';
+import { Container, Typography, Button, Box } from '@mui/material';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import NavBar from '../components/Navbar'; // Import the NavBar component
 
 const HomePage = () => {
-  const { authToken, logout, darkMode, toggleDarkMode } = useContext(AuthContext);
-  const [timeLeft, setTimeLeft] = useState(0);
-
-  useEffect(() => {
-    const tokenExpiration = Number(localStorage.getItem('tokenExpiration')); // Convert to number
-    if (tokenExpiration) {
-      const remainingTime = tokenExpiration - new Date().getTime();
-      if (remainingTime > 0) {
-        setTimeLeft(remainingTime / 1000); // Set time left in seconds
-      } else {
-        logout(); // Logout if the token has already expired
-      }
-    }
-
-    const interval = setInterval(() => {
-      const remainingTime = tokenExpiration - new Date().getTime();
-      if (remainingTime <= 0) {
-        clearInterval(interval);
-        logout(); // Auto logout if time is up
-      } else {
-        setTimeLeft(remainingTime / 1000); // Update time left in seconds
-      }
-    }, 1000);
-
-    return () => clearInterval(interval); // Cleanup on component unmount
-  }, [authToken, logout]);
+  const { authToken, logout, darkMode } = useContext(AuthContext);
 
   return (
     <>
@@ -58,15 +34,14 @@ const HomePage = () => {
         {authToken ? (
           <Box>
             <Typography variant="body1">You are logged in with token: {authToken}</Typography>
-            <Typography variant="body1">
-              Time left until logout: {Math.floor(timeLeft)} seconds
-            </Typography>
             <Button variant="contained" color="primary" onClick={logout} sx={{ mt: '2vh' }}>
               Logout
             </Button>
           </Box>
         ) : (
-          <Typography variant="body1">Please log in to access your account.</Typography>
+          <Typography variant="body1">
+            Please <Link to="/login" style={{ textDecoration: 'none', color: 'blue' }}>log in</Link> to access your account.
+          </Typography>
         )}
       </Container>
     </>

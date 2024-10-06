@@ -7,6 +7,7 @@ import HomePage from './pages/Home';
 import LoginPage from './pages/Login';
 import CreateBlogPage from './pages/BlogForm';
 import Register from './pages/Register';
+import BlogList from './pages/BlogList';
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<Register />} />
         <Route path="/create-blog" element={<CreateBlogPage />} />
+        <Route path='/blog' element={<BlogList/>}/>
       </Routes>
     </>
   );
