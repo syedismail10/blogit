@@ -26,29 +26,30 @@ const Login = ({ darkMode, toggleDarkMode }) => {
         });
 
         // Check the response status
-        if (response.ok) {
+        if (response) {
             const res = await response.json();
-            if (res.data.verified) {
+            if (res.code==200) {
                 // User is verified, proceed with login
                 login(res.data.token); // Call login from AuthContext
                 navigate('/dashboard'); // Redirect after successful login
-            } else {
-                // User is not verified, show OTP input
-                setIsOtpSent(true);
-            }
         } else {
             // Handle specific status codes
-            if (response.status === 401) {
+            if (response.status == 401) {
                 alert('Invalid credentials. Please check your email and password.');
             } else if (response.status === 400) {
                 alert('Bad request. Please verify your input.');
-            } else if (response.status ===310) {
-              setIsOtpSent(true);
-            } else {
+            
+            } else if (response.status==310) {
+            // User is not verified, show OTP input
+            setIsOtpSent(true);
+        }
+             else {
               alert('An error occurred. Please try again later.');
           }
         }
-    } catch (error) {
+      }
+    }
+     catch (error) {
         console.error('Login error', error);
         alert('An error occurred while logging in. Please try again later.');
     }
@@ -66,18 +67,23 @@ const Login = ({ darkMode, toggleDarkMode }) => {
         },
         body: JSON.stringify({ email, otp }), // Send OTP for verification
       });
-
+      const res = await response.json();
       if (response.ok) {
-        const res = await response.json();
-        if (res.data.message === 'User already verified') {
-          // If OTP verification is successful, log the user in
-          // login(res.data.token); // Call login from AuthContext
-          navigate('/dashboard'); // Redirect after successful login
+        if (res.code == 200){
+          alert('OTP Verified successfully!')
+          setIsOtpSent(false)
+          
         } else {
           alert('Invalid OTP. Please try again.'); // Handle invalid OTP
         }
       } else {
+        if(res.message === 'User already verified'){
+          alert('OTP already verified')
+          setIsOtpSent(false)
+        }
+        else{
         alert('OTP verification failed.');
+        }
       }
     } catch (error) {
       console.error('OTP verification error', error);

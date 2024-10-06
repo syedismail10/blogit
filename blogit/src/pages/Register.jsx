@@ -69,7 +69,7 @@ const Register = ({ darkMode, toggleDarkMode }) => {
         otp: otp,
       });
 
-      if (response.data.success) {
+      if (response.status == 200) {
         alert('User successfully verified!');
         // Redirect to login or home page after successful verification
       } else {
