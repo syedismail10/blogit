@@ -1,14 +1,85 @@
-// src/BlogItem.js
-import React from 'react';
-import MDEditor from '@uiw/react-md-editor';
+import React, { useState } from 'react';
+import { Card, CardContent, CardMedia, Typography, IconButton, Box } from '@mui/material';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import axios from 'axios';
 
-const BlogItem = ({ post, onEdit, onDelete }) => (
-  <li>
-    <h3>{post.title}</h3>
-    <MDEditor.Markdown source={post.body} />
-    <button onClick={() => onEdit(post)}>Edit</button>
-    <button onClick={() => onDelete(post.id)}>Delete</button>
-  </li>
-);
+const BlogItem = ({ post }) => {
+  const [upvotes, setUpvotes] = useState(post.upvotes);  // Track upvotes
+  const [downvotes, setDownvotes] = useState(post.downvotes);  // Track downvotes
+  const [hasVoted, setHasVoted] = useState(null);  // Track if user has voted (null, 'upvote', 'downvote')
+
+  // Function to handle upvote/downvote
+  const handleVote = async (voteType) => {
+    const authToken = localStorage.getItem('authToken');
+    try {
+      const response = await axios.post(`http://localhost:3000/vote/${post.slug}/${voteType}`, {}, {
+        headers: {
+          Authorization: `${authToken}`,
+        },
+      });
+
+      if (response.status === 200) {
+        // Update the local vote count immediately after a successful vote
+        if (voteType === 'upvote') {
+          setUpvotes(upvotes + 1);  // Increment upvotes
+          if (hasVoted === 'downvote') setDownvotes(downvotes - 1);  // Adjust downvotes if switching vote
+        } else if (voteType === 'downvote') {
+          setDownvotes(downvotes + 1);  // Increment downvotes
+          if (hasVoted === 'upvote') setUpvotes(upvotes - 1);  // Adjust upvotes if switching vote
+        }
+        setHasVoted(voteType);  // Set the current vote type
+      }
+    } catch (error) {
+      console.error('Error voting:', error);
+    }
+  };
+
+  return (
+    <Card sx={{ maxWidth: 345, boxShadow: 3 }}>
+      {post.media && (
+        <CardMedia
+          component="img"
+          height="140"
+          image={'http://' + post.media}
+          alt={post.media}
+        />
+      )}
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div">
+          {post.title}
+        </Typography>
+        <Typography variant="body2" color="text.secondary" noWrap>
+          {post.description}
+        </Typography>
+        <Typography sx={{ mt: 2 }} variant="subtitle2" color="text.secondary">
+          By {post.user.fullName}
+        </Typography>
+
+        {/* Voting Icons */}
+        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Box display="flex" alignItems="center">
+            <IconButton
+              color={hasVoted === 'upvote' ? 'primary' : 'default'}  // Highlight if voted
+              onClick={() => handleVote('upvote')}
+            >
+              <ThumbUpIcon />
+            </IconButton>
+            <Typography variant="body2" sx={{ ml: 1 }}>{upvotes}</Typography>
+          </Box>
+          <Box display="flex" alignItems="center">
+            <IconButton
+              color={hasVoted === 'downvote' ? 'secondary' : 'default'}  // Highlight if voted
+              onClick={() => handleVote('downvote')}
+            >
+              <ThumbDownIcon />
+            </IconButton>
+            <Typography variant="body2" sx={{ ml: 1 }}>{downvotes}</Typography>
+          </Box>
+        </Box>
+      </CardContent>
+    </Card>
+  );
+};
 
 export default BlogItem;

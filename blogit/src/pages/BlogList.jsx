@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Button, Grid, Card, CardContent, CardMedia, CircularProgress } from '@mui/material';
-import BlogItem from './BlogItem';
+import { Box, Typography, Button, Grid, CircularProgress } from '@mui/material';
 import axios from 'axios';
+import BlogItem from './BlogItem';  // Import BlogItem component
 
 const BlogList = () => {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [isLastPage, setIsLastPage] = useState(false);  // To check if it's the last page
   const [loading, setLoading] = useState(false);
+  const postsPerPage = 5;  // Set the maximum number of posts per page
 
   const fetchBlogs = async (pageNum) => {
-    setLoading(true); // Show loading spinner
+    setLoading(true);  // Show loading spinner
     try {
       const authToken = localStorage.getItem('authToken');
       const response = await axios.get(`http://localhost:3000/blog?page=${pageNum}`, {
@@ -18,12 +19,20 @@ const BlogList = () => {
           Authorization: `Bearer ${authToken}`,
         },
       });
-      setPosts(response.data.data); // Use response.data.data to access blog list
-      setTotalPages(response.data.totalPages); // Assuming API provides total pages
+
+      const fetchedPosts = response.data.data;  // Get posts from the response
+      setPosts(fetchedPosts);
+
+      // If the number of posts fetched is less than postsPerPage, assume it's the last page
+      if (fetchedPosts.length < postsPerPage) {
+        setIsLastPage(true);
+      } else {
+        setIsLastPage(false);
+      }
     } catch (error) {
       console.error('Error fetching blogs:', error);
     } finally {
-      setLoading(false); // Hide loading spinner
+      setLoading(false);  // Hide loading spinner
     }
   };
 
@@ -32,7 +41,7 @@ const BlogList = () => {
   }, [page]);
 
   const handleNextPage = () => {
-    if (page < totalPages) {
+    if (!isLastPage) {
       setPage(page + 1);
     }
   };
@@ -61,27 +70,7 @@ const BlogList = () => {
         <Grid container spacing={4}>
           {posts.map((post) => (
             <Grid item xs={12} sm={6} md={4} key={post.slug}>
-              <Card sx={{ maxWidth: 345, boxShadow: 3 }}>
-                {post.media && (
-                  <CardMedia
-                    component="img"
-                    height="140"
-                    image={post.media}
-                    alt={post.title}
-                  />
-                )}
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {post.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" noWrap>
-                    {post.description}
-                  </Typography>
-                  <Typography sx={{ mt: 2 }} variant="subtitle2" color="text.secondary">
-                    By {post.user.fullName}
-                  </Typography>
-                </CardContent>
-              </Card>
+              <BlogItem post={post} />  {/* Pass post data to BlogItem component */}
             </Grid>
           ))}
         </Grid>
@@ -101,7 +90,7 @@ const BlogList = () => {
           variant="contained"
           color="secondary"
           onClick={handleNextPage}
-          disabled={page === totalPages}
+          disabled={isLastPage}
           sx={{ px: 3 }}
         >
           Next
