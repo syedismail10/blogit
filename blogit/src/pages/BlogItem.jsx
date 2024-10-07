@@ -41,7 +41,7 @@ const BlogItem = ({ post }) => {
         <CardMedia
           component="img"
           height="140"
-          image={'http://' + post.media}
+          image={post.media}
           alt={post.media}
         />
       )}
