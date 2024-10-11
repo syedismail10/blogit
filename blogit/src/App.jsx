@@ -8,7 +8,7 @@ import LoginPage from './pages/Login';
 import CreateBlogPage from './pages/BlogForm';
 import Register from './pages/Register';
 import BlogList from './pages/BlogList';
-
+import BlogDetail from './pages/BlogPage';
 const App = () => {
   return (
     <>
@@ -16,6 +16,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         {/* <Route path="/about" element={<AboutPage />} /> */}
+        <Route path="/blog/:slug" element={<BlogDetail />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<Register />} />
         <Route path="/create-blog" element={<CreateBlogPage />} />
