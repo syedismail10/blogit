@@ -17,6 +17,9 @@ const Navbar = () => {
           {authToken ? 'Username' : 'Guest'}
         </Typography>
         <Box sx={{ display: 'flex', gap: '20px' }}>
+        <Button component={Link} to="/blog" sx={{ color: darkMode ? '#fff' : '#000', textTransform: 'none' }}>
+            Browse Blogs
+          </Button>
           <Button component={Link} to="/" sx={{ color: darkMode ? '#fff' : '#000', textTransform: 'none' }}>
             Blog
           </Button>
