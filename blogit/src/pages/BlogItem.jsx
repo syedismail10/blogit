@@ -4,6 +4,7 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import axios from 'axios';
+import { AuthContext } from '../contexts/AuthContext';
 
 const BlogItem = ({ post }) => {
   const [upvotes, setUpvotes] = useState(post.upvotes); // Track upvotes

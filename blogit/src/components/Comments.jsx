@@ -1,51 +1,33 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState } from 'react';
 import { Box, Typography, TextField, Button, List, ListItem, ListItemText, CircularProgress } from '@mui/material';
 import axios from 'axios';
-import { AuthContext } from '../contexts/AuthContext'; // Import your AuthContext
+import { AuthContext } from '../contexts/AuthContext';
 
-const Comments = ({ blogSlug }) => {
-  const { authToken } = useContext(AuthContext); // Get authToken from AuthContext
-  const [comments, setComments] = useState([]);
+const Comments = ({ blogSlug, blogComments }) => {
+  const authToken = localStorage.getItem('authToken'); // Get authToken from localStorage directly
+  const [comments, setComments] = useState(blogComments || []); // Initialize with blogComments
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(false);
-  const [loadingComments, setLoadingComments] = useState(true);
-
-  // Fetch comments for the blog post
-  const fetchComments = async () => {
-    setLoadingComments(true);
-    try {
-      const response = await axios.get(`http://localhost:3000/comments/${blogSlug}`);
-      setComments(response.data.comments);
-    } catch (error) {
-      console.error('Error fetching comments:', error);
-    } finally {
-      setLoadingComments(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchComments();
-  }, [blogSlug]);
 
   // Handle adding a new comment
-  // Handle adding a new comment
-const handleAddComment = async () => {
+  const handleAddComment = async () => {
     if (!newComment.trim()) return; // Prevent empty comments
-  
+
     setLoading(true);
     try {
       const response = await axios.post(
-        `http://localhost:3000/comments`,  // Adjusted to the correct route
+        `http://localhost:3000/comments`, // Adjusted to the correct route
         {
           comment: newComment, // Sending the comment text
-          blog_slug: blogSlug,  // Sending the blog slug in request body
+          blog_slug: blogSlug, // Sending the blog slug in request body
         },
         {
           headers: {
-            Authorization: `${authToken}`,  // Still sending authToken in headers
+            Authorization: `${authToken}`, // Sending authToken in headers
           },
         }
       );
+
       // Add the new comment to the existing list
       setComments((prevComments) => [...prevComments, response.data.comment]);
       setNewComment(''); // Clear the input field after adding
@@ -55,7 +37,6 @@ const handleAddComment = async () => {
       setLoading(false);
     }
   };
-  
 
   return (
     <Box sx={{ mt: 4 }}>
@@ -64,24 +45,19 @@ const handleAddComment = async () => {
       </Typography>
 
       {/* Displaying comments */}
-      {loadingComments ? (
-        <Box display="flex" justifyContent="center" alignItems="center">
-          <CircularProgress />
-        </Box>
-      ) : comments.length === 0 ? (
+      {comments.length === 0 ? (
         <Typography>No comments yet. Be the first to comment!</Typography>
       ) : (
-    <List>
-        {comments.map((comment, index) => (
+        <List>
+          {comments.map((comment, index) => (
             <ListItem key={index}>
-                <ListItemText
-                    primary={comment?.user?.fullName || 'Anonymous'}  // Safe access to user.fullName
-                    secondary={comment?.text || 'Empty'}
-                />
+              <ListItemText
+                primary={comment?.user?.fullName || 'Anonymous'} // Safe access to user.fullName
+                secondary={comment?.comment || 'Empty'}
+              />
             </ListItem>
-        ))}
-    </List>
-
+          ))}
+        </List>
       )}
 
       {/* Adding a new comment */}

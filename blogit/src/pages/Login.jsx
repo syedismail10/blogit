@@ -30,6 +30,7 @@ const Login = ({ darkMode, toggleDarkMode }) => {
             const res = await response.json();
             if (res.code==200) {
                 // User is verified, proceed with login
+                console.log(res.data.token);
                 login(res.data.token); // Call login from AuthContext
                 navigate('/dashboard'); // Redirect after successful login
         } else {

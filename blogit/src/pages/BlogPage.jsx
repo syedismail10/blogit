@@ -8,21 +8,23 @@ import { AuthContext } from '../contexts/AuthContext'; // Import AuthContext for
 
 const BlogDetail = () => {
   const { slug } = useParams(); // Get the blog slug from the URL
+  console.log(slug);
+
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { authToken } = useContext(AuthContext); // Access authToken for potential API calls
+  // const { authToken } = useContext(AuthContext); // Access authToken for potential API calls
 
   // Fetch blog details by slug
   const fetchBlog = async () => {
     setLoading(true);
+    const authToken = localStorage.getItem('authToken');
     try {
       const response = await axios.get(`http://localhost:3000/blog/${slug}`, {
         headers: {
           Authorization: `${authToken}`,
         },
       });
-      setBlog(response.data.data); // Set the fetched blog data
-      console.log(blog);
+      setBlog(response.data.data.blog); // Set the fetched blog data
     } catch (error) {
       console.error('Error fetching blog:', error);
     } finally {
@@ -70,7 +72,7 @@ const BlogDetail = () => {
       <MDEditor.Markdown source={blog.description} />
 
       {/* Comments Component */}
-      <Comments blogSlug={slug} /> {/* Pass the slug of the blog to Comments */}
+      <Comments blogSlug={slug} blogComments={blog.comments} /> {/* Pass the slug of the blog to Comments */}
     </Box>
   );
 };

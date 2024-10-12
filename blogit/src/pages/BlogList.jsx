@@ -16,7 +16,7 @@ const BlogList = () => {
       const authToken = localStorage.getItem('authToken');
       const response = await axios.get(`http://localhost:3000/blog?page=${pageNum}`, {
         headers: {
-          Authorization: `Bearer ${authToken}`,
+          Authorization: `${authToken}`,
         },
       });
 
