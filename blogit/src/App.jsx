@@ -9,6 +9,7 @@ import CreateBlogPage from './pages/BlogForm';
 import Register from './pages/Register';
 import BlogList from './pages/BlogList';
 import BlogDetail from './pages/BlogPage';
+import UserPage from './pages/UserPage';
 const App = () => {
   return (
     <>
@@ -16,6 +17,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         {/* <Route path="/about" element={<AboutPage />} /> */}
+        <Route path="/user" element= {<UserPage/>}></Route>
         <Route path="/blog/:slug" element={<BlogDetail />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<Register />} />

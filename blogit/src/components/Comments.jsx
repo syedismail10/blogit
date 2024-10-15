@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Typography, TextField, Button, List, ListItem, ListItemText, CircularProgress } from '@mui/material';
 import axios from 'axios';
-import { AuthContext } from '../contexts/AuthContext';
 
 const Comments = ({ blogSlug, blogComments }) => {
   const authToken = localStorage.getItem('authToken'); // Get authToken from localStorage directly
@@ -28,8 +27,20 @@ const Comments = ({ blogSlug, blogComments }) => {
         }
       );
 
+      // Extract the new comment details from the response
+      const { comment, fullName } = response.data.data;
+
+      // Construct a new comment object
+      const newCommentObject = {
+        comment: comment.comment, // The actual comment text
+        createdAt: comment.createdAt, // Store the createdAt date for sorting
+        user: {
+          fullName: fullName, // The name of the user who posted the comment
+        },
+      };
+
       // Add the new comment to the existing list
-      setComments((prevComments) => [...prevComments, response.data.comment]);
+      setComments((prevComments) => [newCommentObject, ...prevComments]); // Add new comment to the start
       setNewComment(''); // Clear the input field after adding
     } catch (error) {
       console.error('Error adding comment:', error);
@@ -37,6 +48,9 @@ const Comments = ({ blogSlug, blogComments }) => {
       setLoading(false);
     }
   };
+
+  // Sort comments by createdAt in ascending order (oldest at the top)
+  const sortedComments = comments.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
   return (
     <Box sx={{ mt: 4 }}>
@@ -49,7 +63,7 @@ const Comments = ({ blogSlug, blogComments }) => {
         <Typography>No comments yet. Be the first to comment!</Typography>
       ) : (
         <List>
-          {comments.map((comment, index) => (
+          {sortedComments.map((comment, index) => (
             <ListItem key={index}>
               <ListItemText
                 primary={comment?.user?.fullName || 'Anonymous'} // Safe access to user.fullName
