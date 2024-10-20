@@ -1,20 +1,15 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Typography, CircularProgress, CardMedia } from '@mui/material';
+import { Link, useParams } from 'react-router-dom'; // Import Link from react-router-dom
 import axios from 'axios';
 import MDEditor from '@uiw/react-md-editor';
-import { useParams } from 'react-router-dom';
-import Comments from '../components/Comments'; // Import Comments component
-import { AuthContext } from '../contexts/AuthContext'; // Import AuthContext for authentication
+import Comments from '../components/Comments';
 
 const BlogDetail = () => {
   const { slug } = useParams(); // Get the blog slug from the URL
-  console.log(slug);
-
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
-  // const { authToken } = useContext(AuthContext); // Access authToken for potential API calls
 
-  // Fetch blog details by slug
   const fetchBlog = async () => {
     setLoading(true);
     const authToken = localStorage.getItem('authToken');
@@ -65,14 +60,19 @@ const BlogDetail = () => {
       )}
 
       <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-        By {blog.user.fullName} | {new Date(blog.createdAt).toLocaleDateString()}
+        By{' '}
+        <Link to={`/user/${blog.user_slug}`} style={{ textDecoration: 'none', color: 'inherit' }}
+        onMouseEnter={(e) => e.target.style.borderBottom = '1px solid'}
+        onMouseLeave={(e) => e.target.style.borderBottom = '1px solid transparent'}>
+          {blog.user.fullName}
+        </Link>{' '}
+        | {new Date(blog.createdAt).toLocaleDateString()}
       </Typography>
 
-      {/* Render Markdown content using MDEditor for the blog body */}
       <MDEditor.Markdown source={blog.description} />
 
       {/* Comments Component */}
-      <Comments blogSlug={slug} blogComments={blog.comments} /> {/* Pass the slug of the blog to Comments */}
+      <Comments blogSlug={slug} blogComments={blog.comments} />
     </Box>
   );
 };

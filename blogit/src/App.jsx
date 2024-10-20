@@ -11,6 +11,9 @@ import BlogList from './pages/BlogList';
 import BlogDetail from './pages/BlogPage';
 import UserPage from './pages/UserPage';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminLogin from './pages/AdminLogin';
+import UserBlogs from './pages/UserBlogs';
+
 const App = () => {
   return (
     <>
@@ -25,6 +28,9 @@ const App = () => {
         <Route path="/create-blog" element={<CreateBlogPage />} />
         <Route path='/blog' element={<BlogList/>}/>
         <Route path='/admin' element={<AdminDashboard/>}></Route>
+        <Route path='/admin-login' element= {<AdminLogin/>}></Route>
+        <Route path="/user/:user_slug" element={<UserBlogs />} />
+
       </Routes>
     </>
   );
