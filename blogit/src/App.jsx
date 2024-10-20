@@ -10,6 +10,7 @@ import Register from './pages/Register';
 import BlogList from './pages/BlogList';
 import BlogDetail from './pages/BlogPage';
 import UserPage from './pages/UserPage';
+import AdminDashboard from './pages/AdminDashboard';
 const App = () => {
   return (
     <>
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/create-blog" element={<CreateBlogPage />} />
         <Route path='/blog' element={<BlogList/>}/>
+        <Route path='/admin' element={<AdminDashboard/>}></Route>
       </Routes>
     </>
   );

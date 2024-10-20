@@ -1,6 +1,6 @@
 // src/pages/UserProfile.jsx
 
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Box, Typography, CircularProgress, Avatar } from '@mui/material';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext'; // Import your AuthContext
