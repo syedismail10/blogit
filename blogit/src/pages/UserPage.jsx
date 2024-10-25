@@ -1,15 +1,18 @@
 // src/pages/UserProfile.jsx
 
 import { useState, useEffect, useContext } from 'react';
-import { Box, Typography, CircularProgress, Avatar } from '@mui/material';
+import { Box, Typography, CircularProgress, Avatar,Button } from '@mui/material';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext'; // Import your AuthContext
+import { useNavigate } from 'react-router-dom';
 
 const UserProfile = () => {
   const authToken = localStorage.getItem('authToken'); // Get authToken from localStorage directly
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch user data when the component mounts
@@ -21,6 +24,7 @@ const UserProfile = () => {
           },
         });
         setUserData(response.data.data); // Assuming the user data is in `data` field
+        console.log(userData);
       } catch (error) {
         console.error('Error fetching user data:', error);
         setError('Failed to fetch user details.');
@@ -36,6 +40,10 @@ const UserProfile = () => {
       setLoading(false);
     }
   }, [authToken]);
+
+  const handleProfileClick = () => {
+    navigate('/edit')
+  }
 
   // Show a loading spinner while fetching data
   if (loading) {
@@ -69,10 +77,9 @@ const UserProfile = () => {
             sx={{ width: 100, height: 100, mb: 2 }}
           />
           <Typography variant="h6">Full Name: {userData.fullName}</Typography>
-          {/* <Typography variant="h6">Email: {userData.email}</Typography> */}
-          {/* Add any other fields from userData you want to display */}
         </>
       )}
+      <Button variant='contained' onClick={handleProfileClick}>Edit</Button>
     </Box>
   );
 };

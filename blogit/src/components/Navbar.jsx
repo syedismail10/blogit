@@ -4,14 +4,14 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext'; // Ensure the correct path
-import ThemeContext from '../contexts/ThemeContext';   // Ensure the correct path
+import {useThemeContext} from '../contexts/ThemeContext';   // Ensure the correct path
 
 const Navbar = () => {
   const { authToken, logout } = useContext(AuthContext); // This should now be defined
-  const { darkMode, toggleDarkMode } = useContext(ThemeContext);
+  const { darkMode, toggleDarkMode } = useThemeContext();
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: darkMode ? '#333' : '#fff', boxShadow: 'none' }}>
+    <AppBar position="static" sx={{ backgroundColor: darkMode ? '#000' : '#fff', boxShadow: 'none' }}>
       <Toolbar sx={{ justifyContent: 'space-between', padding: '10px' }}>
         <Typography variant="h6" sx={{ color: darkMode ? '#fff' : '#000', fontWeight: 'bold' }}>
           {authToken ? 'Username' : 'Guest'}
@@ -20,8 +20,8 @@ const Navbar = () => {
         <Button component={Link} to="/blog" sx={{ color: darkMode ? '#fff' : '#000', textTransform: 'none' }}>
             Browse Blogs
           </Button>
-          <Button component={Link} to="/" sx={{ color: darkMode ? '#fff' : '#000', textTransform: 'none' }}>
-            Blog
+          <Button component={Link} to="/feed" sx={{ color: darkMode ? '#fff' : '#000', textTransform: 'none' }}>
+            Feed
           </Button>
           {authToken && (
             <Button component={Link} to="/create-blog" sx={{ color: darkMode ? '#fff' : '#000', textTransform: 'none' }}>

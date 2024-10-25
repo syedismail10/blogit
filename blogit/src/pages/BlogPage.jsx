@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, CircularProgress, CardMedia, Button } from '@mui/material';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import MDEditor from '@uiw/react-md-editor';
 import Comments from '../components/Comments';
 
 const BlogDetail = () => {
   const { slug } = useParams();
+  const navigate = useNavigate(); // Use useNavigate for navigation
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [voting, setVoting] = useState(false); // Loading state for voting
+  const [voting, setVoting] = useState(false);
+  const [loggedInUserSlug, setLoggedInUserSlug] = useState(null);
 
   const fetchBlog = async () => {
     setLoading(true);
@@ -28,28 +30,42 @@ const BlogDetail = () => {
     }
   };
 
+  const fetchLoggedInUserSlug = async () => {
+    const authToken = localStorage.getItem('authToken');
+    if (!authToken) return;
+
+    try {
+      const response = await axios.get('http://localhost:3000/user/logged-in-user', {
+        headers: {
+          Authorization: `${authToken}`,
+        },
+      });
+      setLoggedInUserSlug(response.data.data.slug);
+    } catch (error) {
+      console.error('Error fetching logged-in user:', error);
+    }
+  };
+
   const handleVote = async (type, e) => {
     e.preventDefault();
     setVoting(true);
     const authToken = localStorage.getItem('authToken');
-  
-    // Optimistically update the vote count
+
     const newVotes = {
       upvotes: type === 'upvote' ? blog.upvotes + 1 : blog.upvotes,
       downvotes: type === 'downvote' ? blog.downvotes + 1 : blog.downvotes,
     };
     setBlog({ ...blog, ...newVotes });
-  
+
     try {
       await axios.post(`http://localhost:3000/vote/${slug}/${type}`, {}, {
         headers: {
           Authorization: `${authToken}`,
         },
       });
-      fetchBlog(); // Refresh blog data to ensure consistency with the server
+      fetchBlog();
     } catch (error) {
       console.error(`Error ${type === 'upvote' ? 'upvoting' : 'downvoting'} the blog:`, error);
-      // Revert the optimistic update if the request fails
       setBlog({
         ...blog,
         upvotes: type === 'upvote' ? blog.upvotes - 1 : blog.upvotes,
@@ -59,10 +75,25 @@ const BlogDetail = () => {
       setVoting(false);
     }
   };
-  
+
+  const handleDeleteBlog = async () => {
+    const authToken = localStorage.getItem('authToken');
+    try {
+      await axios.delete(`http://localhost:3000/blog/delete/${slug}`, {
+        headers: {
+          Authorization: `${authToken}`,
+        },
+      });
+      // Redirect to the home page or another appropriate page after deletion
+      navigate(`/user/${blog.user_slug}`);
+    } catch (error) {
+      console.error('Error deleting the blog:', error);
+    }
+  };
 
   useEffect(() => {
     fetchBlog();
+    fetchLoggedInUserSlug();
   }, [slug]);
 
   if (loading) {
@@ -127,6 +158,18 @@ const BlogDetail = () => {
           Downvote {blog.downvotes}
         </Button>
       </Box>
+
+      {/* Delete Blog Button */}
+      {loggedInUserSlug === blog.user.slug && (
+        <Button
+          variant="outlined"
+          color="error"
+          onClick={handleDeleteBlog}
+          sx={{ my: 2 }}
+        >
+          Delete Blog
+        </Button>
+      )}
 
       {/* Comments Component */}
       <Comments blogSlug={slug} blogComments={blog.comments} />

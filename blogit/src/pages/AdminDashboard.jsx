@@ -5,7 +5,7 @@ import DeleteBlog from '../components/DeleteBlog';
 import DeleteComment from '../components/DeleteComment';
 import PromoteUser from '../components/PromoteUser';
 
-const AdminDashboard = () => {
+const AdminDashboard = () => { 
   return (
     <Container maxWidth="lg" style={{ marginTop: '20px' }}>
       <Typography variant="h4" gutterBottom>

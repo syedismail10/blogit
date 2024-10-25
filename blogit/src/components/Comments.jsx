@@ -1,49 +1,88 @@
-import React, { useState } from 'react';
-import { Box, Typography, TextField, Button, List, ListItem, ListItemText, CircularProgress } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box, Typography, TextField, Button, List, ListItem, ListItemText, CircularProgress, IconButton } from '@mui/material';
+import { Delete as DeleteIcon } from '@mui/icons-material';
 import axios from 'axios';
 
 const Comments = ({ blogSlug, blogComments }) => {
-  const authToken = localStorage.getItem('authToken'); // Get authToken from localStorage directly
-  const [comments, setComments] = useState(blogComments || []); // Initialize with blogComments
+  const authToken = localStorage.getItem('authToken');
+  const [comments, setComments] = useState(blogComments || []);
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loggedInUserSlug, setLoggedInUserSlug] = useState(null);
+
+  // Fetch logged-in user's slug
+  useEffect(() => {
+    const fetchLoggedInUserSlug = async () => {
+      if (!authToken) return;
+
+      try {
+        const response = await axios.get('http://localhost:3000/user/logged-in-user', {
+          headers: {
+            Authorization: `${authToken}`,
+          },
+        });
+        setLoggedInUserSlug(response.data.slug);
+        console.log(loggedInUserSlug);
+      } catch (error) {
+        console.error('Error fetching logged-in user:', error);
+      }
+    };
+
+    fetchLoggedInUserSlug();
+  }, []);
 
   // Handle adding a new comment
   const handleAddComment = async () => {
-    if (!newComment.trim()) return; // Prevent empty comments
+    if (!newComment.trim()) return;
 
     setLoading(true);
     try {
       const response = await axios.post(
-        `http://localhost:3000/comments`, // Adjusted to the correct route
+        `http://localhost:3000/comments`,
         {
-          comment: newComment, // Sending the comment text
-          blog_slug: blogSlug, // Sending the blog slug in request body
+          comment: newComment,
+          blog_slug: blogSlug,
         },
         {
           headers: {
-            Authorization: `${authToken}`, // Sending authToken in headers
+            Authorization: `${authToken}`,
           },
         }
       );
 
-      // Extract the new comment details from the response
       const { comment, fullName } = response.data.data;
-
-      // Construct a new comment object
       const newCommentObject = {
-        comment: comment.comment, // The actual comment text
-        createdAt: comment.createdAt, // Store the createdAt date for sorting
+        comment: comment.comment,
+        createdAt: comment.createdAt,
         user: {
-          fullName: fullName, // The name of the user who posted the comment
+          fullName: fullName,
+          slug: loggedInUserSlug, // Add the logged-in user's slug to the new comment object
         },
       };
 
-      // Add the new comment to the existing list
-      setComments((prevComments) => [newCommentObject, ...prevComments]); // Add new comment to the start
-      setNewComment(''); // Clear the input field after adding
+      setComments((prevComments) => [newCommentObject, ...prevComments]);
+      setNewComment('');
     } catch (error) {
       console.error('Error adding comment:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle deleting a comment
+  const handleDeleteComment = async (commentId) => {
+    setLoading(true);
+    try {
+      await axios.delete(`http://localhost:3000/comments/${commentId}`, {
+        headers: {
+          Authorization: `${authToken}`,
+        },
+      });
+
+      // Remove the comment from the list after successful deletion
+      setComments((prevComments) => prevComments.filter((c) => c.slug !== commentId));
+    } catch (error) {
+      console.error('Error deleting comment:', error);
     } finally {
       setLoading(false);
     }
@@ -63,10 +102,16 @@ const Comments = ({ blogSlug, blogComments }) => {
         <Typography>No comments yet. Be the first to comment!</Typography>
       ) : (
         <List>
-          {sortedComments.map((comment, index) => (
-            <ListItem key={index}>
+          {sortedComments.map((comment) => (
+            <ListItem key={comment.slug} secondaryAction={
+              comment?.userslug === loggedInUserSlug && (
+                <IconButton edge="end" onClick={() => handleDeleteComment(comment.slug)}>
+                  <DeleteIcon />
+                </IconButton>
+              )
+            }>
               <ListItemText
-                primary={comment?.user?.fullName || 'Anonymous'} // Safe access to user.fullName
+                primary={comment?.user?.fullName || 'Anonymous'}
                 secondary={comment?.comment || 'Empty'}
               />
             </ListItem>

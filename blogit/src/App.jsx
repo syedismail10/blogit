@@ -13,6 +13,8 @@ import UserPage from './pages/UserPage';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminLogin from './pages/AdminLogin';
 import UserBlogs from './pages/UserBlogs';
+import UserFeed from './pages/UserFeed';
+import EditProfile from './pages/EditProfile';
 
 const App = () => {
   return (
@@ -30,6 +32,10 @@ const App = () => {
         <Route path='/admin' element={<AdminDashboard/>}></Route>
         <Route path='/admin-login' element= {<AdminLogin/>}></Route>
         <Route path="/user/:user_slug" element={<UserBlogs />} />
+        
+        <Route path="/feed" element={<UserFeed />} />
+        <Route path="/edit" element= {<EditProfile/>}></Route>
+
 
       </Routes>
     </>

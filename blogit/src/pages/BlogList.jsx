@@ -54,7 +54,7 @@ const BlogList = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h3" align="center" gutterBottom sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+      <Typography variant="h3" align="center" gutterBottom sx={{ fontWeight: 'bold',}}>
         Blog Posts
       </Typography>
 
