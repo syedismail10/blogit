@@ -5,6 +5,8 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import { Link } from 'react-router-dom';
 
+import { VITE_API_URL } from '../config';
+
 const Register = ({ darkMode, toggleDarkMode }) => {
   const [formData, setFormData] = useState({
     fullName: '',
@@ -27,7 +29,7 @@ const Register = ({ darkMode, toggleDarkMode }) => {
   
     try {
       const response = await axios.post(
-        'http://localhost:3000/user/signup',
+        `{VITE_API_URL}/user/signup`,
         {
           fullName: formData.name,
           email: formData.email,
@@ -64,7 +66,7 @@ const Register = ({ darkMode, toggleDarkMode }) => {
     e.preventDefault();
     try {
       // Verify OTP by making another API call
-      const response = await axios.post('http://localhost:3000/user/verify-otp', {
+      const response = await axios.post('VITE_API_URL/user/verify-otp', {
         email: formData.email,
         otp: otp,
       });

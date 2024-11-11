@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, TextField, Button, Typography, Avatar, CircularProgress } from '@mui/material';
 import axios from 'axios';
+import { VITE_API_URL } from '../config';
 
 const EditProfile = () => {
   const [name, setName] = useState('');
@@ -16,7 +17,7 @@ const EditProfile = () => {
       if (!authToken) return;
 
       try {
-        const response = await axios.get('http://localhost:3000/user/logged-in-user', {
+        const response = await axios.get(`${VITE_API_URL}/user/logged-in-user`, {
           headers: {
             Authorization: `${authToken}`,
           },
@@ -49,7 +50,7 @@ const EditProfile = () => {
     }
 
     try {
-      await axios.put('http://localhost:3000/user/edit-profile', formData, {
+      await axios.put('VITE_API_URL/user/edit-profile', formData, {
         headers: {
           Authorization: `${authToken}`,
           'Content-Type': 'multipart/form-data',

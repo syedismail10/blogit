@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, Button, Grid, CircularProgress } from '@mui/material';
 import axios from 'axios';
 import BlogItem from './BlogItem';  // Import BlogItem component
+import { VITE_API_URL } from '../config';
 
 const BlogList = () => {
   const [posts, setPosts] = useState([]);
@@ -9,20 +10,20 @@ const BlogList = () => {
   const [isLastPage, setIsLastPage] = useState(false);  // To check if it's the last page
   const [loading, setLoading] = useState(false);
   const postsPerPage = 5;  // Set the maximum number of posts per page
-
+  
   const fetchBlogs = async (pageNum) => {
     setLoading(true);  // Show loading spinner
     try {
       const authToken = localStorage.getItem('authToken');
-      const response = await axios.get(`http://localhost:3000/blog?page=${pageNum}`, {
+      const response = await axios.get(`${VITE_API_URL}/blog?page=${pageNum}`, {
         headers: {
           Authorization: `${authToken}`,
         },
       });
-
+  
       const fetchedPosts = response.data.data;  // Get posts from the response
       setPosts(fetchedPosts);
-
+  
       // If the number of posts fetched is less than postsPerPage, assume it's the last page
       if (fetchedPosts.length < postsPerPage) {
         setIsLastPage(true);
@@ -35,6 +36,7 @@ const BlogList = () => {
       setLoading(false);  // Hide loading spinner
     }
   };
+    
 
   useEffect(() => {
     fetchBlogs(page);

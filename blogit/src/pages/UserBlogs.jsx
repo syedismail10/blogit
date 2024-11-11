@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, CircularProgress, Card, CardContent, CardMedia, Button, Avatar, Pagination } from '@mui/material';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
+import { VITE_API_URL } from '../config';
 
 const UserBlogs = () => {
   const { user_slug } = useParams();
@@ -22,7 +23,7 @@ const UserBlogs = () => {
   const fetchUserDetails = async () => {
     setUserLoading(true);
     try {
-      const response = await axios.get(`http://localhost:3000/user/info/${user_slug}`, {
+      const response = await axios.get(`${VITE_API_URL}/user/info/${user_slug}`, {
         headers: {
           Authorization: `${authToken}`,
         },
@@ -40,7 +41,7 @@ const UserBlogs = () => {
   // Fetch logged-in user details to check if they are viewing their own profile
   const fetchLoggedInUser = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/user/logged-in-user', {
+      const response = await axios.get('VITE_API_URL/user/logged-in-user', {
         headers: {
           Authorization: `${authToken}`,
         },
@@ -61,7 +62,7 @@ const UserBlogs = () => {
   const fetchUserBlogs = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:3000/blog/user/${user_slug}`, {
+      const response = await axios.get(`VITE_API_URL/blog/user/${user_slug}`, {
         params: { page },
         headers: {
           Authorization: `${authToken}`,
@@ -95,8 +96,8 @@ const UserBlogs = () => {
   const handleFollowToggle = async () => {
     try {
       const endpoint = isFollowing
-        ? `http://localhost:3000/relationships/unfollow/${user_slug}`
-        : `http://localhost:3000/relationships/follow/${user_slug}`;
+        ? `VITE_API_URL/relationships/unfollow/${user_slug}`
+        : `VITE_API_URL/relationships/follow/${user_slug}`;
       
       await axios.post(endpoint, {}, {
         headers: {

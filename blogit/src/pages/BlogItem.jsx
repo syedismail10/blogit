@@ -5,6 +5,7 @@ import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
+import { VITE_API_URL } from '../config';
 
 const BlogItem = ({ post }) => {
   const [upvotes, setUpvotes] = useState(post.upvotes); // Track upvotes
@@ -13,30 +14,30 @@ const BlogItem = ({ post }) => {
   const navigate = useNavigate(); // Initialize useNavigate for navigation
 
   // Function to handle upvote/downvote
-  const handleVote = async (voteType) => {
-    const authToken = localStorage.getItem('authToken');
-    try {
-      const response = await axios.post(`http://localhost:3000/vote/${post.slug}/${voteType}`, {}, {
-        headers: {
-          Authorization: `${authToken}`,
-        },
-      });
+  // const handleVote = async (voteType) => {
+  //   const authToken = localStorage.getItem('authToken');
+  //   try {
+  //     const response = await axios.post(`VITE_API_URL/vote/${post.slug}/${voteType}`, {}, {
+  //       headers: {
+  //         Authorization: `${authToken}`,
+  //       },
+  //     });
 
-      if (response.status === 200) {
-        // Update the local vote count immediately after a successful vote
-        if (voteType === 'upvote') {
-          setUpvotes(upvotes + 1); // Increment upvotes
-          if (hasVoted === 'downvote') setDownvotes(downvotes - 1); // Adjust downvotes if switching vote
-        } else if (voteType === 'downvote') {
-          setDownvotes(downvotes + 1); // Increment downvotes
-          if (hasVoted === 'upvote') setUpvotes(upvotes - 1); // Adjust upvotes if switching vote
-        }
-        setHasVoted(voteType); // Set the current vote type
-      }
-    } catch (error) {
-      console.error('Error voting:', error);
-    }
-  };
+  //     if (response.status === 200) {
+  //       // Update the local vote count immediately after a successful vote
+  //       if (voteType === 'upvote') {
+  //         setUpvotes(upvotes + 1); // Increment upvotes
+  //         if (hasVoted === 'downvote') setDownvotes(downvotes - 1); // Adjust downvotes if switching vote
+  //       } else if (voteType === 'downvote') {
+  //         setDownvotes(downvotes + 1); // Increment downvotes
+  //         if (hasVoted === 'upvote') setUpvotes(upvotes - 1); // Adjust upvotes if switching vote
+  //       }
+  //       setHasVoted(voteType); // Set the current vote type
+  //     }
+  //   } catch (error) {
+  //     console.error('Error voting:', error);
+  //   }
+  // };
 
   // Handle navigation to blog details page
   const handleCardClick = () => {
@@ -72,7 +73,7 @@ const BlogItem = ({ post }) => {
           <Box display="flex" alignItems="center" onClick={(e) => e.stopPropagation()}> {/* Prevent card click on vote */}
             <IconButton
               color={hasVoted === 'upvote' ? 'primary' : 'default'} // Highlight if voted
-              onClick={() => handleVote('upvote')}
+              
             >
               <ThumbUpIcon />
             </IconButton>
@@ -81,7 +82,7 @@ const BlogItem = ({ post }) => {
           <Box display="flex" alignItems="center" onClick={(e) => e.stopPropagation()}> {/* Prevent card click on vote */}
             <IconButton
               color={hasVoted === 'downvote' ? 'secondary' : 'default'} // Highlight if voted
-              onClick={() => handleVote('downvote')}
+              
             >
               <ThumbDownIcon />
             </IconButton>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, CircularProgress, Card, CardContent, CardMedia } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { VITE_API_URL } from '../config';
 
 const UserFeed = () => {
   const [blogs, setBlogs] = useState([]);
@@ -13,7 +14,7 @@ const UserFeed = () => {
     setLoading(true);
 
     try {
-      const response = await axios.get('http://localhost:3000/blog/following', {
+      const response = await axios.get(`${VITE_API_URL}/blog/following`, {
         headers: {
           Authorization: `${authToken}`,
         },
@@ -74,8 +75,6 @@ const UserFeed = () => {
                 <Link to={`/user/${blog.user_slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                   {blog.user.fullName}
                 </Link>
-                {' | '}
-                {new Date(blog.createdAt).toLocaleDateString()}
               </Typography>
               <Typography variant="body2" sx={{ mt: 1 }}>
                 {blog.description.slice(0, 100)}...

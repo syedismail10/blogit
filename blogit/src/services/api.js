@@ -1,7 +1,9 @@
 import axios from 'axios';
+//remaining
+import { VITE_API_URL } from '../config';
 
 const API = axios.create({
-  baseURL: 'http://localhost:3000', // Ensure this matches your backend base URL
+  baseURL: VITE_API_URL, // Ensure this matches your backend base URL
 });
 
 // Interceptor for adding the authorization token to each request

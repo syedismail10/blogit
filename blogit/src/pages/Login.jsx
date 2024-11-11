@@ -4,6 +4,7 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext'; // Assuming AuthContext is in this path
+import { VITE_API_URL } from '../config';
 
 const Login = ({ darkMode, toggleDarkMode }) => {
   const [email, setEmail] = useState('');
@@ -17,7 +18,7 @@ const Login = ({ darkMode, toggleDarkMode }) => {
     e.preventDefault();
 
     try {
-        const response = await fetch('http://localhost:3000/user/login', {
+        const response = await fetch(`{VITE_API_URL}/user/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -61,7 +62,7 @@ const Login = ({ darkMode, toggleDarkMode }) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:3000/user/verify-otp', {
+      const response = await fetch('VITE_API_URL/user/verify-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

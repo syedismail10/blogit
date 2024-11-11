@@ -5,6 +5,7 @@ import { Box, Typography, CircularProgress, Avatar,Button } from '@mui/material'
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext'; // Import your AuthContext
 import { useNavigate } from 'react-router-dom';
+import { VITE_API_URL } from '../config';
 
 const UserProfile = () => {
   const authToken = localStorage.getItem('authToken'); // Get authToken from localStorage directly
@@ -18,7 +19,7 @@ const UserProfile = () => {
     // Fetch user data when the component mounts
     const fetchUserData = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/user/logged-in-user', {
+        const response = await axios.get(`${VITE_API_URL}/user/logged-in-user`, {
           headers: {
             Authorization: `${authToken}`,
           },

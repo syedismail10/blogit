@@ -4,6 +4,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import MDEditor from '@uiw/react-md-editor';
 import Comments from '../components/Comments';
+import { VITE_API_URL } from '../config';
 
 const BlogDetail = () => {
   const { slug } = useParams();
@@ -17,7 +18,7 @@ const BlogDetail = () => {
     setLoading(true);
     const authToken = localStorage.getItem('authToken');
     try {
-      const response = await axios.get(`http://localhost:3000/blog/${slug}`, {
+      const response = await axios.get(`${VITE_API_URL}/blog/${slug}`, {
         headers: {
           Authorization: `${authToken}`,
         },
@@ -35,7 +36,7 @@ const BlogDetail = () => {
     if (!authToken) return;
 
     try {
-      const response = await axios.get('http://localhost:3000/user/logged-in-user', {
+      const response = await axios.get('VITE_API_URL/user/logged-in-user', {
         headers: {
           Authorization: `${authToken}`,
         },
@@ -58,7 +59,7 @@ const BlogDetail = () => {
     setBlog({ ...blog, ...newVotes });
 
     try {
-      await axios.post(`http://localhost:3000/vote/${slug}/${type}`, {}, {
+      await axios.post(`VITE_API_URL/vote/${slug}/${type}`, {}, {
         headers: {
           Authorization: `${authToken}`,
         },
@@ -79,7 +80,7 @@ const BlogDetail = () => {
   const handleDeleteBlog = async () => {
     const authToken = localStorage.getItem('authToken');
     try {
-      await axios.delete(`http://localhost:3000/blog/delete/${slug}`, {
+      await axios.delete(`VITE_API_URL/blog/delete/${slug}`, {
         headers: {
           Authorization: `${authToken}`,
         },

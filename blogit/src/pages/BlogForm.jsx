@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import MDEditor from '@uiw/react-md-editor';
 import { Container, TextField, Button, Box, Typography } from '@mui/material';
+import { VITE_API_URL } from '../config';
 
 const BlogForm = ({ postToEdit, onSave, onCancel, userSlug }) => {
   const [title, setTitle] = useState('');
@@ -34,7 +35,7 @@ const BlogForm = ({ postToEdit, onSave, onCancel, userSlug }) => {
   const authToken = localStorage.getItem('authToken'); // Retrieve the auth token from local storage
   
   try {
-    const response = await fetch('http://localhost:3000/blog/create', { // Adjust the API endpoint accordingly
+    const response = await fetch(`${VITE_API_URL}/blog/create`, { // Adjust the API endpoint accordingly
       method: 'POST',
       headers: {
         'Authorization': `${authToken}`, // Add the Authorization header
