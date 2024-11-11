@@ -50,7 +50,7 @@ const EditProfile = () => {
     }
 
     try {
-      await axios.put('VITE_API_URL/user/edit-profile', formData, {
+      await axios.put(`${VITE_API_URL}/user/edit-profile`, formData, {
         headers: {
           Authorization: `${authToken}`,
           'Content-Type': 'multipart/form-data',

@@ -39,7 +39,7 @@ const Comments = ({ blogSlug, blogComments }) => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `VITE_API_URL/comments`,
+        `${VITE_API_URL}/comments`,
         {
           comment: newComment,
           blog_slug: blogSlug,
@@ -74,7 +74,7 @@ const Comments = ({ blogSlug, blogComments }) => {
   const handleDeleteComment = async (commentId) => {
     setLoading(true);
     try {
-      await axios.delete(`VITE_API_URL/comments/${commentId}`, {
+      await axios.delete(`${VITE_API_URL}/comments/${commentId}`, {
         headers: {
           Authorization: `${authToken}`,
         },

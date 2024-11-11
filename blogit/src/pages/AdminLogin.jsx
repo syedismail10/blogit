@@ -62,7 +62,7 @@ const AdminLogin = ({ darkMode, toggleDarkMode }) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('VITE_API_URL/user/verify-otp', {
+      const response = await fetch(`${VITE_API_URL}/user/verify-otp`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -18,7 +18,7 @@ const Login = ({ darkMode, toggleDarkMode }) => {
     e.preventDefault();
 
     try {
-        const response = await fetch(`{VITE_API_URL}/user/login`, {
+        const response = await fetch(`${VITE_API_URL}/user/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ const Login = ({ darkMode, toggleDarkMode }) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('VITE_API_URL/user/verify-otp', {
+      const response = await fetch(`${VITE_API_URL}/user/verify-otp`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

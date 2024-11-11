@@ -41,7 +41,7 @@ const UserBlogs = () => {
   // Fetch logged-in user details to check if they are viewing their own profile
   const fetchLoggedInUser = async () => {
     try {
-      const response = await axios.get('VITE_API_URL/user/logged-in-user', {
+      const response = await axios.get(`${VITE_API_URL}/user/logged-in-user`, {
         headers: {
           Authorization: `${authToken}`,
         },
@@ -62,7 +62,7 @@ const UserBlogs = () => {
   const fetchUserBlogs = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`VITE_API_URL/blog/user/${user_slug}`, {
+      const response = await axios.get(`${VITE_API_URL}/blog/user/${user_slug}`, {
         params: { page },
         headers: {
           Authorization: `${authToken}`,
@@ -96,8 +96,8 @@ const UserBlogs = () => {
   const handleFollowToggle = async () => {
     try {
       const endpoint = isFollowing
-        ? `VITE_API_URL/relationships/unfollow/${user_slug}`
-        : `VITE_API_URL/relationships/follow/${user_slug}`;
+        ? `${VITE_API_URL}/relationships/unfollow/${user_slug}`
+        : `${VITE_API_URL}/relationships/follow/${user_slug}`;
       
       await axios.post(endpoint, {}, {
         headers: {

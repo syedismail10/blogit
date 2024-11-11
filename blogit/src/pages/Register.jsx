@@ -29,7 +29,7 @@ const Register = ({ darkMode, toggleDarkMode }) => {
   
     try {
       const response = await axios.post(
-        `{VITE_API_URL}/user/signup`,
+        `${VITE_API_URL}/user/signup`,
         {
           fullName: formData.name,
           email: formData.email,
@@ -66,7 +66,7 @@ const Register = ({ darkMode, toggleDarkMode }) => {
     e.preventDefault();
     try {
       // Verify OTP by making another API call
-      const response = await axios.post('VITE_API_URL/user/verify-otp', {
+      const response = await axios.post(`${VITE_API_URL}/user/verify-otp`, {
         email: formData.email,
         otp: otp,
       });

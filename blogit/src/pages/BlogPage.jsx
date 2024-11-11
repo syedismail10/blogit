@@ -36,7 +36,7 @@ const BlogDetail = () => {
     if (!authToken) return;
 
     try {
-      const response = await axios.get('VITE_API_URL/user/logged-in-user', {
+      const response = await axios.get(`${VITE_API_URL}/user/logged-in-user`, {
         headers: {
           Authorization: `${authToken}`,
         },
@@ -59,7 +59,7 @@ const BlogDetail = () => {
     setBlog({ ...blog, ...newVotes });
 
     try {
-      await axios.post(`VITE_API_URL/vote/${slug}/${type}`, {}, {
+      await axios.post(`${VITE_API_URL}/vote/${slug}/${type}`, {}, {
         headers: {
           Authorization: `${authToken}`,
         },
@@ -80,7 +80,7 @@ const BlogDetail = () => {
   const handleDeleteBlog = async () => {
     const authToken = localStorage.getItem('authToken');
     try {
-      await axios.delete(`VITE_API_URL/blog/delete/${slug}`, {
+      await axios.delete(`${VITE_API_URL}/blog/delete/${slug}`, {
         headers: {
           Authorization: `${authToken}`,
         },
