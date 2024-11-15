@@ -5,6 +5,7 @@ import axios from 'axios';
 import MDEditor from '@uiw/react-md-editor';
 import Comments from '../components/Comments';
 import { VITE_API_URL } from '../config';
+import { useTitle } from '../services/useTitle';
 
 const BlogDetail = () => {
   const { slug } = useParams();
@@ -13,6 +14,8 @@ const BlogDetail = () => {
   const [loading, setLoading] = useState(true);
   const [voting, setVoting] = useState(false);
   const [loggedInUserSlug, setLoggedInUserSlug] = useState(null);
+
+  useTitle("BlogIt");
 
   const fetchBlog = async () => {
     setLoading(true);

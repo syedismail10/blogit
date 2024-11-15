@@ -3,8 +3,11 @@ import { Box, Typography, Button, IconButton, Switch } from '@mui/material';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import { Link } from 'react-router-dom';
+import { useTitle } from '../services/useTitle';
 
 const NotFound = ({ darkMode, toggleDarkMode }) => {
+  useTitle("Oops :(");
+
   return (
     <Box
       sx={{

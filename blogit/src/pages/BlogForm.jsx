@@ -2,12 +2,15 @@ import { useState, useEffect } from 'react';
 import MDEditor from '@uiw/react-md-editor';
 import { Container, TextField, Button, Box, Typography } from '@mui/material';
 import { VITE_API_URL } from '../config';
+import { useTitle } from '../services/useTitle';
 
 const BlogForm = ({ postToEdit, onSave, onCancel, userSlug }) => {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [media, setMedia] = useState(null); // To store the file
   const [blog, setBlog] = useState(null); // Null at the beginning
+
+  useTitle("Create Blog | BlogIt");
 
   useEffect(() => {
     if (postToEdit) {

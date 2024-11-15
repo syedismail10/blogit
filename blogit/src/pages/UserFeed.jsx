@@ -3,11 +3,14 @@ import { Box, Typography, CircularProgress, Card, CardContent, CardMedia } from 
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { VITE_API_URL } from '../config';
+import { useTitle } from '../services/useTitle';
 
 const UserFeed = () => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  useTitle("Feed");
 
   const fetchFollowingBlogs = async () => {
     const authToken = localStorage.getItem('authToken');

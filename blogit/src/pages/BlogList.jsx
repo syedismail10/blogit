@@ -3,6 +3,7 @@ import { Box, Typography, Button, Grid, CircularProgress } from '@mui/material';
 import axios from 'axios';
 import BlogItem from './BlogItem';  // Import BlogItem component
 import { VITE_API_URL } from '../config';
+import { useTitle } from '../services/useTitle';
 
 const BlogList = () => {
   const [posts, setPosts] = useState([]);
@@ -10,6 +11,8 @@ const BlogList = () => {
   const [isLastPage, setIsLastPage] = useState(false);  // To check if it's the last page
   const [loading, setLoading] = useState(false);
   const postsPerPage = 5;  // Set the maximum number of posts per page
+
+  useTitle("Browse Blogs | BlogIt");
   
   const fetchBlogs = async (pageNum) => {
     setLoading(true);  // Show loading spinner

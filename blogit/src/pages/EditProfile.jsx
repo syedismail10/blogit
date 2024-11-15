@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Box, TextField, Button, Typography, Avatar, CircularProgress } from '@mui/material';
 import axios from 'axios';
 import { VITE_API_URL } from '../config';
+import { useTitle } from '../services/useTitle';
 
 const EditProfile = () => {
   const [name, setName] = useState('');
   const [profileImage, setProfileImage] = useState(null);
   const [profileImagePreview, setProfileImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  useTitle("Edit Profile | BlogIt");
 
   const authToken = localStorage.getItem('authToken');
 

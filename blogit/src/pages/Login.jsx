@@ -5,6 +5,7 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext'; // Assuming AuthContext is in this path
 import { VITE_API_URL } from '../config';
+import { useTitle } from '../services/useTitle';
 
 const Login = ({ darkMode, toggleDarkMode }) => {
   const [email, setEmail] = useState('');
@@ -13,6 +14,8 @@ const Login = ({ darkMode, toggleDarkMode }) => {
   const [isOtpSent, setIsOtpSent] = useState(false); // Track if OTP is sent
   const { login } = useContext(AuthContext); // Get the login function from AuthContext
   const navigate = useNavigate();
+
+  useTitle("Login | BlogIt");
 
   const handleSubmit = async (e) => {
     e.preventDefault();

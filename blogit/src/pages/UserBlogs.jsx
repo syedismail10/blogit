@@ -3,8 +3,11 @@ import { Box, Typography, CircularProgress, Card, CardContent, CardMedia, Button
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { VITE_API_URL } from '../config';
+import { useTitle } from '../services/useTitle';
 
 const UserBlogs = () => {
+  useTitle("User Blogs | BlogIt");
+
   const { user_slug } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
 

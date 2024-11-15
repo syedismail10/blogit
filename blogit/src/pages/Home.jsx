@@ -3,9 +3,12 @@ import { AuthContext } from '../contexts/AuthContext';
 import { Container, Typography, Button, Box } from '@mui/material';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import NavBar from '../components/Navbar'; // Import the NavBar component
+import { useTitle } from '../services/useTitle';
 
 const HomePage = () => {
   const { authToken, logout, darkMode } = useContext(AuthContext);
+
+  useTitle("Home | BlogIt");
 
   return (
     <>

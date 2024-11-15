@@ -6,12 +6,15 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate for naviga
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
 import { VITE_API_URL } from '../config';
+import { useTitle } from '../services/useTitle';
 
 const BlogItem = ({ post }) => {
   const [upvotes, setUpvotes] = useState(post.upvotes); // Track upvotes
   const [downvotes, setDownvotes] = useState(post.downvotes); // Track downvotes
   const [hasVoted, setHasVoted] = useState(null); // Track if user has voted (null, 'upvote', 'downvote')
   const navigate = useNavigate(); // Initialize useNavigate for navigation
+
+  useTitle("Blog | BlogIt");
 
   // Function to handle upvote/downvote
   // const handleVote = async (voteType) => {

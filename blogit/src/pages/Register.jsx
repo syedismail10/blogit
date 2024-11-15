@@ -6,6 +6,7 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import { Link } from 'react-router-dom';
 
 import { VITE_API_URL } from '../config';
+import { useTitle } from '../services/useTitle';
 
 const Register = ({ darkMode, toggleDarkMode }) => {
   const [formData, setFormData] = useState({
@@ -13,6 +14,8 @@ const Register = ({ darkMode, toggleDarkMode }) => {
     email: '',
     password: '',
   });
+
+  useTitle("Register | BlogIt");
 
   const [otp, setOtp] = useState('');
   const [isOtpSent, setIsOtpSent] = useState(false);

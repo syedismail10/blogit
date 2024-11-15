@@ -6,6 +6,7 @@ import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext'; // Import your AuthContext
 import { useNavigate } from 'react-router-dom';
 import { VITE_API_URL } from '../config';
+import { useTitle } from '../services/useTitle';
 
 const UserProfile = () => {
   const authToken = localStorage.getItem('authToken'); // Get authToken from localStorage directly
@@ -63,6 +64,8 @@ const UserProfile = () => {
       </Box>
     );
   }
+
+  useTitle("User Profile");
 
   // Display user details
   return (
