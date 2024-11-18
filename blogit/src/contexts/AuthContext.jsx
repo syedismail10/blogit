@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const AuthContext = createContext();
 
@@ -6,6 +7,8 @@ export const AuthProvider = ({ children }) => {
   const [authToken, setAuthToken] = useState(null); // Initially null to allow re-check from localStorage
 
   const [darkMode, setDarkMode] = useState(() => JSON.parse(localStorage.getItem('darkMode')) || false);
+
+  const navigate = useNavigate();
 
   // Check for auth token in localStorage on mount
   useEffect(() => {
@@ -23,6 +26,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setAuthToken(null);
     localStorage.removeItem('authToken');
+    navigate('/login');
   };
 
   const toggleDarkMode = () => {

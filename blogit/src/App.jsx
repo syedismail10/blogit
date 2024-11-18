@@ -4,7 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import HomePage from './pages/Home';
 // import AboutPage from './pages/About';
-import LoginPage from './pages/Login';
+import Login from './pages/Login';
 import CreateBlogPage from './pages/BlogForm';
 import Register from './pages/Register';
 import BlogList from './pages/BlogList';
@@ -25,7 +25,7 @@ const App = () => {
         {/* <Route path="/about" element={<AboutPage />} /> */}
         <Route path="/user" element= {<UserPage/>}></Route>
         <Route path="/blog/:slug" element={<BlogDetail />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/create-blog" element={<CreateBlogPage />} />
         <Route path='/blog' element={<BlogList/>}/>

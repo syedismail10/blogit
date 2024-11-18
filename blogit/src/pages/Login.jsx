@@ -6,20 +6,21 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext'; // Assuming AuthContext is in this path
 import { VITE_API_URL } from '../config';
 import { useTitle } from '../services/useTitle';
+import { useThemeContext } from '../contexts/ThemeContext';
 
-const Login = ({ darkMode, toggleDarkMode }) => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [otp, setOtp] = useState(''); // State for OTP
   const [isOtpSent, setIsOtpSent] = useState(false); // Track if OTP is sent
   const { login } = useContext(AuthContext); // Get the login function from AuthContext
   const navigate = useNavigate();
+  const { darkMode, toggleDarkMode } = useThemeContext();
 
   useTitle("Login | BlogIt");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
         const response = await fetch(`${VITE_API_URL}/user/login`, {
             method: 'POST',
@@ -98,9 +99,9 @@ const Login = ({ darkMode, toggleDarkMode }) => {
   return (
     <Box
       sx={{
-        backgroundColor: darkMode ? '#333' : '#fff',
+        backgroundColor: darkMode ? '#121212' : '#fff',
         color: darkMode ? '#fff' : '#000',
-        minHeight: '100vh',
+        minHeight: '80vh',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -109,8 +110,11 @@ const Login = ({ darkMode, toggleDarkMode }) => {
         padding: '20px',
       }}
     >
-      <Typography variant="h4" sx={{ mb: 3 }}>
+      <Typography variant="h4" sx={{ mb: 1 }}>
         Login
+      </Typography>
+      <Typography variant="p" sx={{ mb: 3 }}>
+        Pick up from where you left off!
       </Typography>
       <Box component="form" onSubmit={isOtpSent ? handleOtpSubmit : handleSubmit} sx={{ width: '100%', maxWidth: '400px' }}>
         <TextField
@@ -158,16 +162,27 @@ const Login = ({ darkMode, toggleDarkMode }) => {
           {isOtpSent ? 'Verify OTP' : 'Login'}
         </Button>
         <Typography>
-          Don't have an account? <Link to="/register">Register</Link>
+          Don't have an account? 
+          <Link 
+            to="/register" 
+            style={{
+              color: darkMode ? '#fff' : '#000', 
+              fontWeight: 'bold',
+              marginLeft: '6px',
+              textDecoration: 'underline',
+            }}
+          >
+            Register
+          </Link>
         </Typography>
       </Box>
 
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', mt: 4 }}>
+      {/* <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', mt: 4 }}>
         <IconButton onClick={toggleDarkMode} sx={{ color: darkMode ? '#fff' : '#000' }}>
           {darkMode ? <LightModeIcon /> : <DarkModeIcon />}
         </IconButton>
         <Switch checked={darkMode} onChange={toggleDarkMode} />
-      </Box>
+      </Box> */}
     </Box>
   );
 };

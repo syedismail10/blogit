@@ -7,8 +7,9 @@ import { Link } from 'react-router-dom';
 
 import { VITE_API_URL } from '../config';
 import { useTitle } from '../services/useTitle';
+import { useThemeContext } from '../contexts/ThemeContext';
 
-const Register = ({ darkMode, toggleDarkMode }) => {
+const Register = () => {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -19,6 +20,7 @@ const Register = ({ darkMode, toggleDarkMode }) => {
 
   const [otp, setOtp] = useState('');
   const [isOtpSent, setIsOtpSent] = useState(false);
+  const { darkMode, toggleDarkMode } = useThemeContext();
 
   const handleChange = (e) => {
     setFormData({
@@ -89,9 +91,9 @@ const Register = ({ darkMode, toggleDarkMode }) => {
   return (
     <Box
       sx={{
-        backgroundColor: darkMode ? '#333' : '#fff',
+        backgroundColor: darkMode ? '#121212' : '#fff',
         color: darkMode ? '#fff' : '#000',
-        minHeight: '100vh',
+        minHeight: '85vh',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -100,8 +102,11 @@ const Register = ({ darkMode, toggleDarkMode }) => {
         padding: '20px',
       }}
     >
-      <Typography variant="h4" sx={{ mb: 3 }}>
+      <Typography variant="h4" sx={{ mb: 1 }}>
         {isOtpSent ? 'Verify OTP' : 'Register'}
+      </Typography>
+      <Typography variant="p" sx={{ mb: 3 }}>
+        Join the world of bloggers today!
       </Typography>
       
       {!isOtpSent ? (
@@ -143,6 +148,20 @@ const Register = ({ darkMode, toggleDarkMode }) => {
           >
             Register
           </Button>
+          <Typography>
+          Already have an account?
+            <Link 
+              to="/login" 
+              style={{
+                color: darkMode ? '#fff' : '#000', 
+                fontWeight: 'bold',
+                marginLeft: '6px',
+                textDecoration: 'underline',
+              }}
+            >
+              Login
+            </Link>
+          </Typography>
         </Box>
       ) : (
         <Box component="form" onSubmit={handleOtpVerification} sx={{ width: '100%', maxWidth: '400px' }}>
