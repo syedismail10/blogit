@@ -102,7 +102,15 @@ const Register = () => {
         padding: '20px',
       }}
     >
-      <Typography variant="h4" sx={{ mb: 1 }}>
+      <Typography 
+        variant="h3" 
+        gutterBottom 
+        sx={{ 
+          marginBottom: '30px', 
+          fontWeight: 800, 
+          fontFamily: '"Besley", serif' 
+        }}
+      >
         {isOtpSent ? 'Verify OTP' : 'Register'}
       </Typography>
       <Typography variant="p" sx={{ mb: 3 }}>

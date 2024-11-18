@@ -6,6 +6,7 @@ import MDEditor from '@uiw/react-md-editor';
 import Comments from '../components/Comments';
 import { VITE_API_URL } from '../config';
 import { useTitle } from '../services/useTitle';
+import { useThemeContext } from '../contexts/ThemeContext';
 
 const BlogDetail = () => {
   const { slug } = useParams();
@@ -14,6 +15,7 @@ const BlogDetail = () => {
   const [loading, setLoading] = useState(true);
   const [voting, setVoting] = useState(false);
   const [loggedInUserSlug, setLoggedInUserSlug] = useState(null);
+  const { darkMode, toggleDarkMode } = useThemeContext();
 
   useTitle("BlogIt");
 
@@ -27,6 +29,7 @@ const BlogDetail = () => {
         },
       });
       setBlog(response.data.data.blog);
+      console.log(response.data.data);
     } catch (error) {
       console.error('Error fetching blog:', error);
     } finally {
@@ -113,7 +116,7 @@ const BlogDetail = () => {
   }
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ p: 3 }} data-color-mode={darkMode ? 'dark' : 'light'}>
       <Typography variant="h3" gutterBottom>
         {blog.title}
       </Typography>
@@ -141,7 +144,7 @@ const BlogDetail = () => {
         | {new Date(blog.createdAt).toLocaleDateString()}
       </Typography>
 
-      <MDEditor.Markdown source={blog.description} />
+      <MDEditor.Markdown source={blog.description}/>
 
       {/* Upvote/Downvote Buttons */}
       <Box display="flex" gap={2} sx={{ my: 2 }}>

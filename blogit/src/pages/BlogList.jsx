@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Button, Grid, CircularProgress } from '@mui/material';
+import { Box, Typography, Button, Grid, CircularProgress, Grid2 } from '@mui/material';
 import axios from 'axios';
 import BlogItem from './BlogItem';  // Import BlogItem component
 import { VITE_API_URL } from '../config';
@@ -59,26 +59,39 @@ const BlogList = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h3" align="center" gutterBottom sx={{ fontWeight: 'bold',}}>
-        Blog Posts
+      <Typography 
+        variant="h3" 
+        gutterBottom 
+        sx={{ 
+          marginBottom: '30px', 
+          fontWeight: 800, 
+          fontFamily: '"Besley", serif' 
+        }}
+      >
+        Blogs
       </Typography>
+
 
       {loading ? (
         <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: '50vh' }}>
-          <CircularProgress />
+          <CircularProgress color="secondary" size={60} />
         </Box>
       ) : posts.length === 0 ? (
-        <Typography align="center" variant="h6">
+        <Typography align="center" variant="h6" sx={{ color: 'gray', fontStyle: 'italic' }}>
           No posts available.
         </Typography>
       ) : (
-        <Grid container spacing={4}>
-          {posts.map((post) => (
-            <Grid item xs={12} sm={6} md={4} key={post.slug}>
-              <BlogItem post={post} />  {/* Pass post data to BlogItem component */}
-            </Grid>
+        <Grid2 container spacing={3}>
+          {posts.map((post, index) => (
+            <Grid2 item xs={12} sm={6} md={4} key={post.slug}>
+              <BlogItem
+                post={post}
+                isEven={index % 2 === 0} // Pass 'isEven' based on the index
+                sx={{ borderRadius: '10px', boxShadow: 3 }}
+              />
+            </Grid2>
           ))}
-        </Grid>
+        </Grid2>
       )}
 
       <Box display="flex" justifyContent="center" alignItems="center" sx={{ mt: 4 }}>

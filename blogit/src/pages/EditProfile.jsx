@@ -70,7 +70,15 @@ const EditProfile = () => {
 
   return (
     <Box sx={{ maxWidth: 400, mx: 'auto', p: 3, mt: 4 }}>
-      <Typography variant="h5" gutterBottom>
+      <Typography 
+        variant="h3" 
+        gutterBottom 
+        sx={{ 
+          marginBottom: '30px', 
+          fontWeight: 800, 
+          fontFamily: '"Besley", serif' 
+        }}
+      >
         Edit Profile
       </Typography>
       <form onSubmit={handleSubmit}>
@@ -103,7 +111,7 @@ const EditProfile = () => {
         <Button
           type="submit"
           variant="contained"
-          color="primary"
+          color="secondary"
           fullWidth
           disabled={loading}
         >

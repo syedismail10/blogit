@@ -66,3 +66,10 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 } */
+
+.use-besley {
+  font-family: "Besley", serif;
+  font-optical-sizing: auto;
+  font-weight: 800;
+  font-style: normal;
+}

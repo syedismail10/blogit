@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, CircularProgress, Card, CardContent, CardMedia } from '@mui/material';
+import { Box, Typography, CircularProgress, Card, CardContent, CardMedia, Grid2 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { VITE_API_URL } from '../config';
 import { useTitle } from '../services/useTitle';
+import BlogItem from './BlogItem';
 
 const UserFeed = () => {
   const [blogs, setBlogs] = useState([]);
@@ -48,43 +49,63 @@ const UserFeed = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Your Feed
+      <Typography 
+        variant="h3" 
+        gutterBottom 
+        sx={{ 
+          marginBottom: '30px', 
+          fontWeight: 800, 
+          fontFamily: '"Besley", serif' 
+        }}
+      >
+        Feed
       </Typography>
 
       {blogs.length === 0 ? (
         <Typography>No blogs found from your following. Start following creators to see their blogs here!</Typography>
       ) : (
-        blogs.map((blog) => (
-          <Card 
-            key={blog.slug} 
-            sx={{ mb: 2, cursor: 'pointer' }} 
-            onClick={() => handleCardClick(blog.slug)} // Pass blog.slug to the handler
-          >
-            {blog.media && (
-              <CardMedia
-                component="img"
-                height="200"
-                image={blog.media}
-                alt={blog.title}
+        <Grid2 container spacing={3}>
+          {blogs.map((post, index) => (
+            <Grid2 item xs={12} sm={6} md={4} key={post.slug}>
+              <BlogItem
+                post={post}
+                isEven={index % 2 === 0} // Pass 'isEven' based on the index
+                sx={{ borderRadius: '10px', boxShadow: 3 }}
               />
-            )}
-            <CardContent>
-              <Typography variant="h5" component="div">
-                {blog.title}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                By{' '}
-                <Link to={`/user/${blog.user_slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                  {blog.user.fullName}
-                </Link>
-              </Typography>
-              <Typography variant="body2" sx={{ mt: 1 }}>
-                {blog.description.slice(0, 100)}...
-              </Typography>
-            </CardContent>
-          </Card>
-        ))
+            </Grid2>
+          ))}
+        </Grid2>
+        
+        // blogs.map((blog) => (
+        //   <Card 
+        //     key={blog.slug} 
+        //     sx={{ mb: 2, cursor: 'pointer' }} 
+        //     onClick={() => handleCardClick(blog.slug)} // Pass blog.slug to the handler
+        //   >
+        //     {blog.media && (
+        //       <CardMedia
+        //         component="img"
+        //         height="200"
+        //         image={blog.media}
+        //         alt={blog.title}
+        //       />
+        //     )}
+        //     <CardContent>
+        //       <Typography variant="h5" component="div">
+        //         {blog.title}
+        //       </Typography>
+        //       <Typography variant="body2" color="text.secondary">
+        //         By{' '}
+        //         <Link to={`/user/${blog.user_slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+        //           {blog.user.fullName}
+        //         </Link>
+        //       </Typography>
+        //       <Typography variant="body2" sx={{ mt: 1 }}>
+        //         {blog.description.slice(0, 100)}...
+        //       </Typography>
+        //     </CardContent>
+        //   </Card>
+        // ))
       )}
     </Box>
   );

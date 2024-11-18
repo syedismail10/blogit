@@ -10,6 +10,7 @@ const Comments = ({ blogSlug, blogComments }) => {
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(false);
   const [loggedInUserSlug, setLoggedInUserSlug] = useState(null);
+  const [roastLoading, setRoastLoading] = useState(false);
 
   // Fetch logged-in user's slug
   useEffect(() => {
@@ -31,6 +32,23 @@ const Comments = ({ blogSlug, blogComments }) => {
 
     fetchLoggedInUserSlug();
   }, []);
+
+  const fetchBlogRoast = async () => {
+    setRoastLoading(true); // Set loading to true while the request is in progress
+    try {
+      const response = await axios.get(`${VITE_API_URL}/blog/roast/${blogSlug}`, {
+        headers: {
+          Authorization: `${authToken}`,
+        },
+      });
+      setNewComment(response.data.data.roast.content);
+    } catch (error) {
+      console.error('Error fetching blog roast:', error);
+      setRoastLoading(false);
+    } finally {
+      setRoastLoading(false);
+    }
+  };
 
   // Handle adding a new comment
   const handleAddComment = async () => {
@@ -112,6 +130,7 @@ const Comments = ({ blogSlug, blogComments }) => {
               )
             }>
               <ListItemText
+                key={comment.slug}
                 primary={comment?.user?.fullName || 'Anonymous'}
                 secondary={comment?.comment || 'Empty'}
               />
@@ -132,6 +151,15 @@ const Comments = ({ blogSlug, blogComments }) => {
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
           />
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={fetchBlogRoast}
+            sx={{ mt: 2, mr: 5 }}
+            disabled={roastLoading}
+          >
+            Roast!
+          </Button>
           <Button
             variant="contained"
             color="primary"

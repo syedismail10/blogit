@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, CircularProgress, Card, CardContent, CardMedia, Button, Avatar, Pagination } from '@mui/material';
+import { Box, Typography, CircularProgress, Card, CardContent, CardMedia, Button, Avatar, Pagination, Grid2 } from '@mui/material';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { VITE_API_URL } from '../config';
 import { useTitle } from '../services/useTitle';
+import BlogItem from './BlogItem';
 
 const UserBlogs = () => {
   useTitle("User Blogs | BlogIt");
@@ -132,7 +133,7 @@ const UserBlogs = () => {
             sx={{ width: 56, height: 56, mr: 2 }}
           />
           <Box>
-            <Typography variant="h5">{user.fullName}</Typography>
+            <Typography variant="h5" sx={{fontFamily: '"Besley", serif'}}>{user.fullName}</Typography>
             <Typography variant="body2" color="text.secondary">
               Followers: {user.followers} | Following: {user.following}
             </Typography>
@@ -152,38 +153,32 @@ const UserBlogs = () => {
       )}
 
       {/* User Blogs */}
-      <Typography variant="h4" gutterBottom>
+      <Typography 
+        variant="h3" 
+        gutterBottom 
+        sx={{ 
+          marginBottom: '30px', 
+          fontWeight: 800, 
+          fontFamily: '"Besley", serif' 
+        }}
+      >
         Blogs by {user?.fullName || user_slug}
       </Typography>
 
       {blogs.length === 0 ? (
         <Typography variant="h6">No blogs found for this user.</Typography>
       ) : (
-        blogs.map((blog) => (
-          <Card key={blog.slug} sx={{ mb: 2 }}>
-            {blog.media && (
-              <CardMedia
-                component="img"
-                height="200"
-                image={blog.media}
-                alt={blog.title}
+        <Grid2 container spacing={3}>
+          {blogs.map((post, index) => (
+            <Grid2 item xs={12} sm={6} md={4} key={post.slug}>
+              <BlogItem
+                post={post}
+                isEven={index % 2 === 0} // Pass 'isEven' based on the index
+                sx={{ borderRadius: '10px', boxShadow: 3 }}
               />
-            )}
-            <CardContent>
-              <Typography variant="h5">{blog.title}</Typography>
-              <Typography variant="body1" paragraph>
-                {blog.description.substring(0, 150)}...
-              </Typography>
-              <Button 
-                component={Link} 
-                to={`/blog/${blog.slug}`} 
-                variant="outlined"
-              >
-                Read More
-              </Button>
-            </CardContent>
-          </Card>
-        ))
+            </Grid2>
+          ))}
+        </Grid2>
       )}
 
       {/* Pagination Controls */}
