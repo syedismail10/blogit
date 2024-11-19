@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { deleteBlog } from '../services/api';
+import { Button, TextField } from '@mui/material';
 
 const DeleteBlog = () => {
   const [blogSlug, setBlogSlug] = useState('');
@@ -15,15 +16,16 @@ const DeleteBlog = () => {
   };
 
   return (
-    <div>
-      <h2>Delete Blog</h2>
-      <input
+    <div style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
+      <TextField
         type="text"
         value={blogSlug}
         onChange={(e) => setBlogSlug(e.target.value)}
         placeholder="Enter blog slug"
       />
-      <button onClick={handleDelete}>Delete Blog</button>
+      <div style={{display: 'flex', flexDirection: 'row', gap: '10px'}}>
+        <Button variant="contained" color="error" onClick={handleDelete}>Delete Blog</Button>
+      </div>
       <p>{message}</p>
     </div>
   );

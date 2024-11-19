@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { deleteComment } from '../services/api';
+import { Button, TextField } from '@mui/material';
 
 const DeleteComment = () => {
   const [commentSlug, setCommentSlug] = useState('');
@@ -15,15 +16,16 @@ const DeleteComment = () => {
   };
 
   return (
-    <div>
-      <h2>Delete Comment</h2>
-      <input
+    <div style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
+      <TextField
         type="text"
         value={commentSlug}
         onChange={(e) => setCommentSlug(e.target.value)}
         placeholder="Enter comment slug"
       />
-      <button onClick={handleDelete}>Delete Comment</button>
+      <div style={{display: 'flex', flexDirection: 'row', gap: '10px'}}>
+        <Button variant="contained" color="error" onClick={handleDelete}>Delete Comment</Button>
+      </div>
       <p>{message}</p>
     </div>
   );

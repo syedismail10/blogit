@@ -12,13 +12,29 @@ const AdminDashboard = () => {
 
   return (
     <Container maxWidth="lg" style={{ marginTop: '20px' }}>
-      <Typography variant="h4" gutterBottom>
+      <Typography 
+        variant="h3" 
+        gutterBottom 
+        sx={{ 
+          marginBottom: '30px', 
+          fontWeight: 800, 
+          fontFamily: '"Besley", serif',
+          textAlign: 'center'
+        }}
+      >
         Admin Dashboard
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
           <Paper elevation={3} style={{ padding: '20px' }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography 
+              variant="h5" 
+              gutterBottom 
+              sx={{ 
+                fontWeight: 800, 
+                fontFamily: '"Besley", serif',
+              }}
+            >
               Block User
             </Typography>
             <BlockUser />
@@ -26,7 +42,14 @@ const AdminDashboard = () => {
         </Grid>
         <Grid item xs={12} md={6}>
           <Paper elevation={3} style={{ padding: '20px' }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography 
+              variant="h5" 
+              gutterBottom 
+              sx={{ 
+                fontWeight: 800, 
+                fontFamily: '"Besley", serif',
+              }}
+            >
               Delete Blog
             </Typography>
             <DeleteBlog />
@@ -34,7 +57,14 @@ const AdminDashboard = () => {
         </Grid>
         <Grid item xs={12} md={6}>
           <Paper elevation={3} style={{ padding: '20px' }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography 
+              variant="h5" 
+              gutterBottom 
+              sx={{ 
+                fontWeight: 800, 
+                fontFamily: '"Besley", serif',
+              }}
+            >
               Delete Comment
             </Typography>
             <DeleteComment />
@@ -42,8 +72,15 @@ const AdminDashboard = () => {
         </Grid>
         <Grid item xs={12} md={6}>
           <Paper elevation={3} style={{ padding: '20px' }}>
-            <Typography variant="h6" gutterBottom>
-              Promote User
+            <Typography 
+              variant="h5" 
+              gutterBottom 
+              sx={{ 
+                fontWeight: 800, 
+                fontFamily: '"Besley", serif',
+              }}
+            >
+              Make Admin
             </Typography>
             <PromoteUser />
           </Paper>

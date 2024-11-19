@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { blockUser, unblockUser } from '../services/api';
+import { Button, TextField } from '@mui/material';
+import { useThemeContext } from '../contexts/ThemeContext';
 
 const BlockUser = () => {
   const [userSlug, setUserSlug] = useState('');
   const [message, setMessage] = useState('');
+  const { darkMode, toggleDarkMode } = useThemeContext();
 
   const handleBlock = async () => {
     try {
@@ -24,16 +27,17 @@ const BlockUser = () => {
   };
 
   return (
-    <div>
-      <h2>Block/Unblock User</h2>
-      <input
+    <div style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
+      <TextField
         type="text"
         value={userSlug}
         onChange={(e) => setUserSlug(e.target.value)}
         placeholder="Enter user slug"
       />
-      <button onClick={handleBlock}>Block User</button>
-      <button onClick={handleUnblock}>Unblock User</button>
+      <div style={{display: 'flex', flexDirection: 'row', gap: '10px'}}>
+        <Button variant="contained" color="error" onClick={handleBlock}>Block User</Button>
+        <Button variant={darkMode ? "contained" : "outlined"} color={darkMode ? "warning" : "error"} onClick={handleUnblock}>Unblock User</Button>
+      </div>
       <p>{message}</p>
     </div>
   );

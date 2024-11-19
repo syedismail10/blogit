@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { promoteUser } from '../services/api';
+import { Button, TextField } from '@mui/material';
 
 const PromoteUser = () => {
   const [email, setEmail] = useState('');
@@ -15,15 +16,16 @@ const PromoteUser = () => {
   };
 
   return (
-    <div>
-      <h2>Promote User to Admin</h2>
-      <input
+    <div style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
+      <TextField
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Enter user email"
       />
-      <button onClick={handlePromote}>Promote to Admin</button>
+      <div style={{display: 'flex', flexDirection: 'row', gap: '10px'}}>
+        <Button variant="contained" color="warning" onClick={handlePromote}>Promote to Admin</Button>
+      </div>
       <p>{message}</p>
     </div>
   );
