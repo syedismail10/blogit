@@ -55,7 +55,8 @@ const UserFeed = () => {
         sx={{ 
           marginBottom: '30px', 
           fontWeight: 800, 
-          fontFamily: '"Besley", serif' 
+          fontFamily: '"Besley", serif',
+          textAlign: 'center'
         }}
       >
         Feed
@@ -64,7 +65,12 @@ const UserFeed = () => {
       {blogs.length === 0 ? (
         <Typography>No blogs found from your following. Start following creators to see their blogs here!</Typography>
       ) : (
-        <Grid2 container spacing={3}>
+        <Grid2 
+          container 
+          spacing={3} 
+          justifyContent="center" 
+          alignItems="center"
+        >
           {blogs.map((post, index) => (
             <Grid2 item xs={12} sm={6} md={4} key={post.slug}>
               <BlogItem
@@ -75,37 +81,6 @@ const UserFeed = () => {
             </Grid2>
           ))}
         </Grid2>
-        
-        // blogs.map((blog) => (
-        //   <Card 
-        //     key={blog.slug} 
-        //     sx={{ mb: 2, cursor: 'pointer' }} 
-        //     onClick={() => handleCardClick(blog.slug)} // Pass blog.slug to the handler
-        //   >
-        //     {blog.media && (
-        //       <CardMedia
-        //         component="img"
-        //         height="200"
-        //         image={blog.media}
-        //         alt={blog.title}
-        //       />
-        //     )}
-        //     <CardContent>
-        //       <Typography variant="h5" component="div">
-        //         {blog.title}
-        //       </Typography>
-        //       <Typography variant="body2" color="text.secondary">
-        //         By{' '}
-        //         <Link to={`/user/${blog.user_slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-        //           {blog.user.fullName}
-        //         </Link>
-        //       </Typography>
-        //       <Typography variant="body2" sx={{ mt: 1 }}>
-        //         {blog.description.slice(0, 100)}...
-        //       </Typography>
-        //     </CardContent>
-        //   </Card>
-        // ))
       )}
     </Box>
   );

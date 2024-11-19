@@ -159,7 +159,8 @@ const UserBlogs = () => {
         sx={{ 
           marginBottom: '30px', 
           fontWeight: 800, 
-          fontFamily: '"Besley", serif' 
+          fontFamily: '"Besley", serif',
+          textAlign: 'center'
         }}
       >
         Blogs by {user?.fullName || user_slug}
@@ -168,7 +169,12 @@ const UserBlogs = () => {
       {blogs.length === 0 ? (
         <Typography variant="h6">No blogs found for this user.</Typography>
       ) : (
-        <Grid2 container spacing={3}>
+        <Grid2 
+          container 
+          spacing={3} 
+          justifyContent="center" 
+          alignItems="center"
+        >
           {blogs.map((post, index) => (
             <Grid2 item xs={12} sm={6} md={4} key={post.slug}>
               <BlogItem

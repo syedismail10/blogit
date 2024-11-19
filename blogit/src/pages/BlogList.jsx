@@ -63,9 +63,10 @@ const BlogList = () => {
         variant="h3" 
         gutterBottom 
         sx={{ 
-          marginBottom: '30px', 
+          marginBottom: '50px', 
           fontWeight: 800, 
-          fontFamily: '"Besley", serif' 
+          fontFamily: '"Besley", serif',
+          textAlign: 'center'
         }}
       >
         Blogs
@@ -81,9 +82,14 @@ const BlogList = () => {
           No posts available.
         </Typography>
       ) : (
-        <Grid2 container spacing={3}>
+        <Grid2 
+          container 
+          spacing={3} 
+          justifyContent="center" 
+          alignItems="center"
+        >
           {posts.map((post, index) => (
-            <Grid2 item xs={12} sm={6} md={4} key={post.slug}>
+            <Grid2 item xs={12} sm={6} md={4}key={post.slug}>
               <BlogItem
                 post={post}
                 isEven={index % 2 === 0} // Pass 'isEven' based on the index

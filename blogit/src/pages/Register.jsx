@@ -1,10 +1,9 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { Box, Button, TextField, Typography, IconButton, Switch } from '@mui/material';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import LightModeIcon from '@mui/icons-material/LightMode';
-import { Link } from 'react-router-dom';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Link, useNavigate } from 'react-router-dom';
 import { VITE_API_URL } from '../config';
 import { useTitle } from '../services/useTitle';
 import { useThemeContext } from '../contexts/ThemeContext';
@@ -15,6 +14,8 @@ const Register = () => {
     email: '',
     password: '',
   });
+
+  const navigate = useNavigate();
 
   useTitle("Register | BlogIt");
 
@@ -51,17 +52,17 @@ const Register = () => {
   
       if (response.data) {
         setIsOtpSent(true);
-        alert('OTP has been sent to your email');
+        toast.info('OTP has been sent to your email');
       }
     } catch (error) {
       if (error.response) {
         // Server responded with an error status code
         console.error('Error response:', error.response.data);
-        alert(`Registration failed: ${error.response.data.message || 'Bad Request'}`);
+        toast.error(`Registration failed: ${error.response.data.message || 'Bad Request'}`);
       } else {
         // Other errors (network issues, etc.)
         console.error('Error:', error.message);
-        alert('Registration failed');
+        toast.error('Registration failed');
       }
     }
   };
@@ -77,121 +78,137 @@ const Register = () => {
       });
 
       if (response.status == 200) {
-        alert('User successfully verified!');
+        alert('User successfully verified, now log in!');
         // Redirect to login or home page after successful verification
+        navigate('/login');
       } else {
-        alert('Invalid OTP. Please try again.');
+        toast.error('Invalid OTP. Please try again.');
       }
     } catch (error) {
       console.error('Error during OTP verification:', error);
-      alert('OTP verification failed');
+      toast.error('OTP verification failed');
     }
   };
 
   return (
-    <Box
-      sx={{
-        backgroundColor: darkMode ? '#121212' : '#fff',
-        color: darkMode ? '#fff' : '#000',
-        minHeight: '85vh',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        textAlign: 'center',
-        padding: '20px',
-      }}
-    >
-      <Typography 
-        variant="h3" 
-        gutterBottom 
-        sx={{ 
-          marginBottom: '30px', 
-          fontWeight: 800, 
-          fontFamily: '"Besley", serif' 
+    <>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme={darkMode ? "dark" : "light"}
+        transition: Bounce
+      />
+      <Box
+        sx={{
+          backgroundColor: darkMode ? '#121212' : '#fff',
+          color: darkMode ? '#fff' : '#000',
+          minHeight: '85vh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          textAlign: 'center',
+          padding: '20px',
         }}
       >
-        {isOtpSent ? 'Verify OTP' : 'Register'}
-      </Typography>
-      <Typography variant="p" sx={{ mb: 3 }}>
-        Join the world of bloggers today!
-      </Typography>
-      
-      {!isOtpSent ? (
-        <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%', maxWidth: '400px' }}>
-          <TextField
-            label="Name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            fullWidth
-            required
-            sx={{ mb: 3 }}
-          />
-          <TextField
-            label="Email"
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            fullWidth
-            required
-            sx={{ mb: 3 }}
-          />
-          <TextField
-            label="Password"
-            name="password"
-            type="password"
-            value={formData.password}
-            onChange={handleChange}
-            fullWidth
-            required
-            sx={{ mb: 3 }}
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            fullWidth
-            sx={{ mb: 2, backgroundColor: darkMode ? '#fff' : '#000', color: darkMode ? '#000' : '#fff' }}
-          >
-            Register
-          </Button>
-          <Typography>
-          Already have an account?
-            <Link 
-              to="/login" 
-              style={{
-                color: darkMode ? '#fff' : '#000', 
-                fontWeight: 'bold',
-                marginLeft: '6px',
-                textDecoration: 'underline',
-              }}
+        <Typography 
+          variant="h3" 
+          gutterBottom 
+          sx={{ 
+            marginBottom: '30px', 
+            fontWeight: 800, 
+            fontFamily: '"Besley", serif' 
+          }}
+        >
+          {isOtpSent ? 'Verify OTP' : 'Register'}
+        </Typography>
+        <Typography variant="p" sx={{ mb: 3 }}>
+          Join the world of bloggers today!
+        </Typography>
+        
+        {!isOtpSent ? (
+          <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%', maxWidth: '400px' }}>
+            <TextField
+              label="Name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              fullWidth
+              required
+              sx={{ mb: 3 }}
+            />
+            <TextField
+              label="Email"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              fullWidth
+              required
+              sx={{ mb: 3 }}
+            />
+            <TextField
+              label="Password"
+              name="password"
+              type="password"
+              value={formData.password}
+              onChange={handleChange}
+              fullWidth
+              required
+              sx={{ mb: 3 }}
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              sx={{ mb: 2, backgroundColor: darkMode ? '#fff' : '#000', color: darkMode ? '#000' : '#fff' }}
             >
-              Login
-            </Link>
-          </Typography>
-        </Box>
-      ) : (
-        <Box component="form" onSubmit={handleOtpVerification} sx={{ width: '100%', maxWidth: '400px' }}>
-          <TextField
-            label="OTP"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            fullWidth
-            required
-            sx={{ mb: 3 }}
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            fullWidth
-            sx={{ mb: 2, backgroundColor: darkMode ? '#fff' : '#000', color: darkMode ? '#000' : '#fff' }}
-          >
-            Verify OTP
-          </Button>
-        </Box>
-      )}
-    </Box>
+              Register
+            </Button>
+            <Typography>
+            Already have an account?
+              <Link 
+                to="/login" 
+                style={{
+                  color: darkMode ? '#fff' : '#000', 
+                  fontWeight: 'bold',
+                  marginLeft: '6px',
+                  textDecoration: 'underline',
+                }}
+              >
+                Login
+              </Link>
+            </Typography>
+          </Box>
+        ) : (
+          <Box component="form" onSubmit={handleOtpVerification} sx={{ width: '100%', maxWidth: '400px' }}>
+            <TextField
+              label="OTP"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              fullWidth
+              required
+              sx={{ mb: 3 }}
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              sx={{ mb: 2, backgroundColor: darkMode ? '#fff' : '#000', color: darkMode ? '#000' : '#fff' }}
+            >
+              Verify OTP
+            </Button>
+          </Box>
+        )}
+      </Box>
+    </>
   );
 };
 
