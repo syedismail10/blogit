@@ -4,6 +4,7 @@ import axios from 'axios';
 import BlogItem from './BlogItem';  // Import BlogItem component
 import { VITE_API_URL } from '../config';
 import { useTitle } from '../services/useTitle';
+import NotLoggedIn from './NotLoggedIn';
 
 const BlogList = () => {
   const [posts, setPosts] = useState([]);
@@ -56,6 +57,10 @@ const BlogList = () => {
       setPage(page - 1);
     }
   };
+
+  if (!authToken) {
+    return <NotLoggedIn/>;
+  }
 
   return (
     <Box sx={{ p: 3 }}>

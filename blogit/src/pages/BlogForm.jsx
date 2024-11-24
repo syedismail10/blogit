@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import MDEditor from '@uiw/react-md-editor';
 import { Container, TextField, Button, Box, Typography, Chip } from '@mui/material';
 import { VITE_API_URL } from '../config';
@@ -7,6 +7,8 @@ import { useThemeContext } from '../contexts/ThemeContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import NotLoggedIn from './NotLoggedIn';
+import { AuthContext } from '../contexts/AuthContext';
 
 const BlogForm = ({ postToEdit, onSave, onCancel, userSlug }) => {
   const [title, setTitle] = useState('');
@@ -16,6 +18,7 @@ const BlogForm = ({ postToEdit, onSave, onCancel, userSlug }) => {
   const { darkMode, toggleDarkMode } = useThemeContext();
   const [fileName, setFileName] = useState('');
   const navigate = useNavigate();
+  const { authToken } = useContext(AuthContext);
 
   useTitle("Create Blog | BlogIt");
 
@@ -79,6 +82,10 @@ const BlogForm = ({ postToEdit, onSave, onCancel, userSlug }) => {
       console.error('Error posting blog:', error);
     }
   };
+
+  if (!authToken) {
+    return <NotLoggedIn/>;
+  }
 
 
   return (

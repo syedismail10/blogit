@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useTitle } from '../services/useTitle';
 import { useThemeContext } from '../contexts/ThemeContext';
 
-const NotFound = () => {
+const NotLoggedIn = () => {
   const { darkMode, toggleDarkMode } = useThemeContext();
 
   useTitle("Oops :(");
@@ -24,7 +24,7 @@ const NotFound = () => {
       }}
     >
       <Typography 
-          variant="h1" 
+          variant="h3" 
           gutterBottom 
           sx={{ 
             marginBottom: '30px', 
@@ -32,22 +32,22 @@ const NotFound = () => {
             fontFamily: '"Besley", serif' 
           }}
         >
-          404
+          Please Log In!
         </Typography>
-      <Typography variant="h4" sx={{ mb: 4 }}>
-        Oops! Page not found.
+      <Typography variant="h5" sx={{ mb: 4 }}>
+        Oops! Looks like you're not logged in.
       </Typography>
       <Button
         component={Link}
-        to="/"
+        to="/login"
         variant="contained"
         color="primary"
         sx={{ textTransform: 'none', mb: 3, backgroundColor: darkMode ? '#fff' : '#000', color: darkMode ? '#000' : '#fff' }}
       >
-        Go Back to Home
+        Login
       </Button>
     </Box>
   );
 };
 
-export default NotFound;
+export default NotLoggedIn;

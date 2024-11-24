@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import {
   Box,
   Typography,
@@ -14,12 +14,14 @@ import Comments from '../components/Comments';
 import { VITE_API_URL } from '../config';
 import { useTitle } from '../services/useTitle';
 import { useThemeContext } from '../contexts/ThemeContext';
+import NotLoggedIn from './NotLoggedIn';
+import { AuthContext } from '../contexts/AuthContext';
 
 const BlogDetail = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { darkMode } = useThemeContext();
-
+  const { authToken } = useContext(AuthContext);
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
   const [voting, setVoting] = useState(false);
@@ -121,6 +123,10 @@ const BlogDetail = () => {
         <CircularProgress />
       </Box>
     );
+  }
+
+  if (!authToken) {
+    return <NotLoggedIn/>;
   }
 
   if (!blog) {

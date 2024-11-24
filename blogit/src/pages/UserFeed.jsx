@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Box, Typography, CircularProgress, Card, CardContent, CardMedia, Grid2 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { VITE_API_URL } from '../config';
 import { useTitle } from '../services/useTitle';
 import BlogItem from './BlogItem';
+import NotLoggedIn from './NotLoggedIn';
+import { AuthContext } from '../contexts/AuthContext';
 
 const UserFeed = () => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  const { authToken } = useContext(AuthContext);
 
   useTitle("Feed");
 
@@ -45,6 +49,10 @@ const UserFeed = () => {
         <CircularProgress />
       </Box>
     );
+  }
+
+  if (!authToken) {
+    return <NotLoggedIn/>;
   }
 
   return (

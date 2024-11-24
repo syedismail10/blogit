@@ -7,6 +7,7 @@ import { AuthContext } from '../contexts/AuthContext'; // Import your AuthContex
 import { useNavigate } from 'react-router-dom';
 import { VITE_API_URL } from '../config';
 import { useTitle } from '../services/useTitle';
+import NotLoggedIn from './NotLoggedIn';
 
 const UserProfile = () => {
   const authToken = localStorage.getItem('authToken'); // Get authToken from localStorage directly
@@ -54,6 +55,10 @@ const UserProfile = () => {
         <CircularProgress />
       </Box>
     );
+  }
+
+  if (!authToken) {
+    return <NotLoggedIn/>;
   }
 
   // Handle error display

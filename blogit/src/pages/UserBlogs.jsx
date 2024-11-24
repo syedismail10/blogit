@@ -5,6 +5,7 @@ import axios from 'axios';
 import { VITE_API_URL } from '../config';
 import { useTitle } from '../services/useTitle';
 import BlogItem from './BlogItem';
+import NotLoggedIn from './NotLoggedIn';
 
 const UserBlogs = () => {
   useTitle("User Blogs | BlogIt");
@@ -144,6 +145,10 @@ const UserBlogs = () => {
         <CircularProgress />
       </Box>
     );
+  }
+
+  if (!authToken) {
+    return <NotLoggedIn/>;
   }
 
   return (

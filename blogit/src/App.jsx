@@ -1,8 +1,7 @@
 // App.js
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import HomePage from './pages/Home';
 import Login from './pages/Login';
 import CreateBlogPage from './pages/BlogForm';
 import Register from './pages/Register';
@@ -20,36 +19,25 @@ import { AuthContext } from './contexts/AuthContext';
 const App = () => {
   const { authToken } = useContext(AuthContext);
 
-  const protect = (route) => {
-    return authToken ? route : <Login/>;
-  }
-
   return (
     <>
       <Navbar />
-      {/* Routes */}
-      <Routes>
 
-        <Route path="/" element={authToken ? <UserFeed/> : <Login/>} />
-        <Route path="/user" element= {protect(<UserPage/>)}></Route>
-        <Route path="/blog/:slug" element={protect(<BlogDetail />)} />
+      <Routes>
+        {/* Unprotected Routes */}
+        <Route path="/" element={authToken ? <UserFeed /> : <Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/create-blog" element={protect(<CreateBlogPage />)} />
-        <Route path='/blog' element={protect(<BlogList/>)}/>
-        <Route path='/admin-dashboard' element={protect(<AdminDashboard/>)}></Route>
-        <Route path='/admin-login' element= {<AdminLogin/>}></Route>
-        <Route path="/user/:user_slug" element={protect(<UserBlogs />)} />
-        <Route path="/feed" element={protect(<UserFeed />)} />
-        <Route path="/edit" element= {protect(<EditProfile/>)}></Route>
-
-        {/* Wildcard route for 404 Page */} 
-        <Route
-          path="*"
-          element={<NotFound />}
-        />
-
-
+        <Route path="/admin-login" element={<AdminLogin />} />
+        <Route path="/user" element={<UserPage />} />
+        <Route path="/create-blog" element={<CreateBlogPage />} />
+        <Route path="/user/:user_slug" element={<UserBlogs />} />
+        <Route path="/blog/:slug" element={<BlogDetail />} />
+        <Route path="/blog" element={<BlogList />} />
+        <Route path="/feed" element={<UserFeed />} />
+        <Route path="/edit" element={<EditProfile />} />
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );

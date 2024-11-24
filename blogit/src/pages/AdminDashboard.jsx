@@ -1,14 +1,22 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Container, Grid, Paper, Typography } from '@mui/material';
 import BlockUser from '../components/BlockUser';
 import DeleteBlog from '../components/DeleteBlog';
 import DeleteComment from '../components/DeleteComment';
 import PromoteUser from '../components/PromoteUser';
 import { useTitle } from '../services/useTitle';
+import NotLoggedIn from './NotLoggedIn';
+import { AuthContext } from '../contexts/AuthContext';
 
 const AdminDashboard = () => {
 
   useTitle("Admin Dashboard | BlogIt");
+
+  const { authToken } = useContext(AuthContext);
+
+  if (!authToken) {
+    return <NotLoggedIn/>;
+  }
 
   return (
     <Container maxWidth="lg" style={{ marginTop: '20px' }}>
