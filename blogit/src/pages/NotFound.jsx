@@ -4,16 +4,19 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import { Link } from 'react-router-dom';
 import { useTitle } from '../services/useTitle';
+import { useThemeContext } from '../contexts/ThemeContext';
 
-const NotFound = ({ darkMode, toggleDarkMode }) => {
+const NotFound = () => {
+  const { darkMode, toggleDarkMode } = useThemeContext();
+
   useTitle("Oops :(");
 
   return (
     <Box
       sx={{
-        backgroundColor: darkMode ? '#333' : '#fff',
+        backgroundColor: darkMode ? '#121212' : '#fff',
         color: darkMode ? '#fff' : '#000',
-        height: '100vh',
+        height: '80vh',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -22,9 +25,17 @@ const NotFound = ({ darkMode, toggleDarkMode }) => {
         padding: '20px',
       }}
     >
-      <Typography variant="h1" sx={{ fontWeight: 'bold', mb: 2 }}>
-        404
-      </Typography>
+      <Typography 
+          variant="h1" 
+          gutterBottom 
+          sx={{ 
+            marginBottom: '30px', 
+            fontWeight: 800, 
+            fontFamily: '"Besley", serif' 
+          }}
+        >
+          404
+        </Typography>
       <Typography variant="h4" sx={{ mb: 4 }}>
         Oops! Page not found.
       </Typography>
@@ -37,14 +48,6 @@ const NotFound = ({ darkMode, toggleDarkMode }) => {
       >
         Go Back to Home
       </Button>
-      
-      {/* Dark/Light Mode Toggle */}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <IconButton onClick={toggleDarkMode} sx={{ color: darkMode ? '#fff' : '#000' }}>
-          {darkMode ? <LightModeIcon /> : <DarkModeIcon />}
-        </IconButton>
-        <Switch checked={darkMode} onChange={toggleDarkMode} />
-      </Box>
     </Box>
   );
 };

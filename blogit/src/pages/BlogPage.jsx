@@ -99,7 +99,7 @@ const BlogDetail = () => {
     } finally {
         setVoting(false);
     }
-};
+  };
 
   const handleDeleteBlog = async () => {
     const authToken = localStorage.getItem('authToken');

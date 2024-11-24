@@ -54,9 +54,11 @@ const Navbar = () => {
   return (
     <AppBar position="sticky" sx={{ backgroundColor: darkMode ? '#000' : '#fff', boxShadow: 'none' }}>
       <Toolbar sx={{ justifyContent: 'space-between', padding: '10px' }}>
-        <Typography variant="h6" sx={{ color: darkMode ? '#fff' : '#000', fontWeight: 'bold', }}>
-          BlogIt
-        </Typography>
+        <Link to={"/"} style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Typography variant="h6" sx={{ color: darkMode ? '#fff' : '#000', fontWeight: 'bold', }}>
+            BlogIt
+          </Typography>
+        </Link>
         {authToken
           ? (
           <Box sx={{ display: 'flex', gap: '20px' }}>
