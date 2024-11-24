@@ -61,15 +61,29 @@ const BlogDetail = () => {
 
   // Handle voting
   const handleVote = async (type) => {
+    const authToken = localStorage.getItem('authToken');
     const typecheck = type + 'd';
     if (votingStatus === typecheck) {
-      console.log(`Already ${type}d. No request made.`);
-      alert(`${type} already done`)
+      // console.log(`Already ${type}d. No request made.`);
+      // alert(`${type} already done`)
+      await axios.delete(
+        `${VITE_API_URL}/vote/${slug}`,
+        {
+          headers: { Authorization: `${authToken}` },
+        }
+      );
+      setBlog((prevBlog) => ({
+        ...prevBlog,
+        votingStatus: type,
+        upvotes: type === 'upvote' ? prevBlog.upvotes - 1 : prevBlog.upvotes,
+        downvotes: type === 'downvote' ? prevBlog.downvotes - 1 : prevBlog.downvotes,
+      }));
+      await fetchBlog();
       return;
     }
 
     setVoting(true);
-    const authToken = localStorage.getItem('authToken');
+    
     try {
       await axios.post(
         `${VITE_API_URL}/vote/${slug}/${type}`,
