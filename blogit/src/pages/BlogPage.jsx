@@ -53,35 +53,53 @@ const BlogDetail = () => {
     }
   };
 
-  const handleVote = async (type, e) => {
-    e.preventDefault();
+  const handleVote = async (type) => {
     setVoting(true);
     const authToken = localStorage.getItem('authToken');
 
-    const newVotes = {
-      upvotes: type === 'upvote' ? blog.upvotes + 1 : blog.upvotes,
-      downvotes: type === 'downvote' ? blog.downvotes + 1 : blog.downvotes,
-    };
-    setBlog({ ...blog, ...newVotes });
-
+    // Better error handling and logging
     try {
-      await axios.post(`${VITE_API_URL}/vote/${slug}/${type}`, {}, {
-        headers: {
-          Authorization: `${authToken}`,
-        },
-      });
-      fetchBlog();
+        // Log the request details
+        console.log('Making request to:', `${VITE_API_URL}/vote/${slug}/${type}`);
+        console.log('Headers:', {
+            Authorization: `${authToken}`,
+        });
+
+        const response = await axios.post(
+            `${VITE_API_URL}/vote/${slug}/${type}`,
+            {}, // empty body
+            {
+                headers: {
+                    'Authorization': `${authToken}`, // Add 'Bearer' if required
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+
+        console.log('Vote response:', response.data);
+        await fetchBlog(); // Make sure this is awaited
+
     } catch (error) {
-      console.error(`Error ${type === 'upvote' ? 'upvoting' : 'downvoting'} the blog:`, error);
-      setBlog({
-        ...blog,
-        upvotes: type === 'upvote' ? blog.upvotes - 1 : blog.upvotes,
-        downvotes: type === 'downvote' ? blog.downvotes - 1 : blog.downvotes,
-      });
+        if (axios.isAxiosError(error)) {
+            console.error('Axios error:', {
+                message: error.message,
+                response: error.response?.data,
+                status: error.response?.status,
+            });
+        } else {
+            console.error('Error voting:', error);
+        }
+
+        // Revert the optimistic update
+        setBlog(prevBlog => ({
+            ...prevBlog,
+            upvotes: type === 'upvote' ? prevBlog.upvotes - 1 : prevBlog.upvotes,
+            downvotes: type === 'downvote' ? prevBlog.downvotes - 1 : prevBlog.downvotes,
+        }));
     } finally {
-      setVoting(false);
+        setVoting(false);
     }
-  };
+};
 
   const handleDeleteBlog = async () => {
     const authToken = localStorage.getItem('authToken');
