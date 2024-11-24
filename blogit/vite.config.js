@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 
 dotenv.config()
 
+console.log('loaded variables',process.env)
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],

@@ -98,30 +98,21 @@ const UserBlogs = () => {
   };
 
   const handleFollowToggle = async () => {
-    const authToken = localStorage.getItem('authToken');
     try {
       const endpoint = isFollowing
         ? `${VITE_API_URL}/relationships/unfollow/${user_slug}`
         : `${VITE_API_URL}/relationships/follow/${user_slug}`;
-  
-      const headers = {
-        Authorization: `${authToken}`, // Ensure authToken has a valid value
-      };
-  
-      if (isFollowing) {
-        // Correct handling of headers for DELETE
-        await axios.delete(endpoint, { headers });
-      } else {
-        // POST is already correct
-        await axios.post(endpoint, {}, { headers });
-      }
-  
+      
+      await axios.post(endpoint, {}, {
+        headers: {
+          Authorization: `${authToken}`,
+        },
+      });
       setFollowing(!isFollowing);
     } catch (error) {
-      console.error("Error following/unfollowing user:", error);
+      console.error('Error following/unfollowing user:', error);
     }
   };
-  
 
   if (userLoading || loading) {
     return (
