@@ -24,7 +24,6 @@ const App = () => {
       <Navbar />
 
       <Routes>
-        {/* Unprotected Routes */}
         <Route path="/" element={authToken ? <UserFeed /> : <Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Box, Typography, Button, Grid, CircularProgress, Grid2 } from '@mui/material';
 import axios from 'axios';
 import BlogItem from './BlogItem';  // Import BlogItem component
 import { VITE_API_URL } from '../config';
 import { useTitle } from '../services/useTitle';
 import NotLoggedIn from './NotLoggedIn';
+import { AuthContext } from '../contexts/AuthContext';
 
 const BlogList = () => {
   const [posts, setPosts] = useState([]);
@@ -12,6 +13,7 @@ const BlogList = () => {
   const [isLastPage, setIsLastPage] = useState(false);  // To check if it's the last page
   const [loading, setLoading] = useState(false);
   const postsPerPage = 5;  // Set the maximum number of posts per page
+  const { authToken } = useContext(AuthContext);
 
   useTitle("Browse Blogs | BlogIt");
   
