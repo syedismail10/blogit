@@ -3,18 +3,20 @@ import { Box, Typography, TextField, Button, List, ListItem, ListItemText, Circu
 import { Delete as DeleteIcon } from '@mui/icons-material';
 import axios from 'axios';
 import { VITE_API_URL } from '../config';
+import LoadingModal from './LoadingModal';
 
 const Comments = ({ blogSlug, blogComments }) => {
   const authToken = localStorage.getItem('authToken');
   const [comments, setComments] = useState(blogComments || []);
   const [newComment, setNewComment] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [loggedInUserSlug, setLoggedInUserSlug] = useState(null);
   const [roastLoading, setRoastLoading] = useState(false);
 
   // Fetch logged-in user's slug
   useEffect(() => {
     const fetchLoggedInUserSlug = async () => {
+      setLoading(true);
       if (!authToken) return;
 
       try {
@@ -28,6 +30,7 @@ const Comments = ({ blogSlug, blogComments }) => {
       } catch (error) {
         console.error('Error fetching logged-in user:', error);
       }
+      setLoading(false);
     };
 
     fetchLoggedInUserSlug();
@@ -111,71 +114,74 @@ const Comments = ({ blogSlug, blogComments }) => {
   const sortedComments = comments.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
   return (
-    <Box sx={{ mt: 4 }}>
-      <Typography variant="h5" gutterBottom>
-        Comments
-      </Typography>
-
-      {/* Displaying comments */}
-      {comments.length === 0 ? (
-        <Typography>No comments yet. Be the first to comment!</Typography>
-      ) : (
-        <List>
-          {sortedComments.map((comment) => (
-            <ListItem key={comment.slug} secondaryAction={
-              comment?.userslug === loggedInUserSlug && (
-                <IconButton edge="end" onClick={() => handleDeleteComment(comment.slug)}>
-                  <DeleteIcon />
-                </IconButton>
-              )
-            }>
-              <ListItemText
-                key={comment.slug}
-                primary={comment?.user?.fullName || 'Anonymous'}
-                secondary={comment?.comment || 'Empty'}
-              />
-            </ListItem>
-          ))}
-        </List>
-      )}
-
-      {/* Adding a new comment */}
-      {authToken ? (
-        <Box sx={{ mt: 3 }}>
-          <TextField
-            fullWidth
-            multiline
-            rows={3}
-            variant="outlined"
-            label="Add a comment"
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-          />
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={fetchBlogRoast}
-            sx={{ mt: 2, mr: 5 }}
-            disabled={roastLoading}
-          >
-            Roast!
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAddComment}
-            sx={{ mt: 2 }}
-            disabled={loading}
-          >
-            {loading ? 'Submitting...' : 'Submit Comment'}
-          </Button>
-        </Box>
-      ) : (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-          You must be logged in to add a comment.
+    <>
+      <LoadingModal isOpen={loading || roastLoading} message={roastLoading ? 'Our AI is working hard to roast this blog...' : 'Loading'}/>
+      <Box sx={{ mt: 4 }}>
+        <Typography variant="h5" gutterBottom>
+          Comments
         </Typography>
-      )}
-    </Box>
+
+        {/* Displaying comments */}
+        {comments.length === 0 ? (
+          <Typography>No comments yet. Be the first to comment!</Typography>
+        ) : (
+          <List>
+            {sortedComments.map((comment) => (
+              <ListItem key={comment.slug} secondaryAction={
+                comment?.userslug === loggedInUserSlug && (
+                  <IconButton edge="end" onClick={() => handleDeleteComment(comment.slug)}>
+                    <DeleteIcon />
+                  </IconButton>
+                )
+              }>
+                <ListItemText
+                  key={comment.slug}
+                  primary={comment?.user?.fullName || 'Anonymous'}
+                  secondary={comment?.comment || 'Empty'}
+                />
+              </ListItem>
+            ))}
+          </List>
+        )}
+
+        {/* Adding a new comment */}
+        {authToken ? (
+          <Box sx={{ mt: 3 }}>
+            <TextField
+              fullWidth
+              multiline
+              rows={3}
+              variant="outlined"
+              label="Add a comment"
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+            />
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={fetchBlogRoast}
+              sx={{ mt: 2, mr: 5 }}
+              disabled={roastLoading}
+            >
+              Roast!
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddComment}
+              sx={{ mt: 2 }}
+              disabled={loading}
+            >
+              {loading ? 'Submitting...' : 'Submit Comment'}
+            </Button>
+          </Box>
+        ) : (
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+            You must be logged in to add a comment.
+          </Typography>
+        )}
+      </Box>
+    </>
   );
 };
 

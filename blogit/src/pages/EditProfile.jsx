@@ -6,12 +6,13 @@ import { useTitle } from '../services/useTitle';
 import { ToastContainer, toast } from 'react-toastify';
 import { useThemeContext } from '../contexts/ThemeContext';
 import NotLoggedIn from './NotLoggedIn';
+import LoadingModal from '../components/LoadingModal';
 
 const EditProfile = () => {
   const [name, setName] = useState('');
   const [profileImage, setProfileImage] = useState(null);
   const [profileImagePreview, setProfileImagePreview] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { darkMode, toggleDarkMode } = useThemeContext();
 
   useTitle("Edit Profile | BlogIt");
@@ -21,6 +22,7 @@ const EditProfile = () => {
   // Fetch user data on component mount
   useEffect(() => {
     const fetchUserData = async () => {
+      setLoading(true);
       if (!authToken) return;
 
       try {
@@ -34,6 +36,8 @@ const EditProfile = () => {
         setProfileImagePreview(profileImg);
       } catch (error) {
         console.error('Error fetching user data:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -72,12 +76,13 @@ const EditProfile = () => {
     }
   };
 
-  if (!authToken) {
+  if (!authToken && !loading) {
     return <NotLoggedIn/>;
   }
 
   return (
     <>
+      <LoadingModal isOpen={loading}/>
       <ToastContainer
         position="top-right"
         autoClose={5000}

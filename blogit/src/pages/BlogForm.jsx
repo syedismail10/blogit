@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import NotLoggedIn from './NotLoggedIn';
 import { AuthContext } from '../contexts/AuthContext';
+import LoadingModal from '../components/LoadingModal';
 
 const BlogForm = ({ postToEdit, onSave, onCancel, userSlug }) => {
   const [title, setTitle] = useState('');
@@ -19,6 +20,8 @@ const BlogForm = ({ postToEdit, onSave, onCancel, userSlug }) => {
   const [fileName, setFileName] = useState('');
   const navigate = useNavigate();
   const { authToken } = useContext(AuthContext);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useTitle("Create Blog | BlogIt");
 
@@ -39,6 +42,7 @@ const BlogForm = ({ postToEdit, onSave, onCancel, userSlug }) => {
   };
 
   const handleSubmit = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
 
     if(title == "") {
@@ -81,15 +85,17 @@ const BlogForm = ({ postToEdit, onSave, onCancel, userSlug }) => {
     } catch (error) {
       console.error('Error posting blog:', error);
     }
+    setIsLoading(false);
   };
 
-  if (!authToken) {
+  if (!authToken && !isLoading) {
     return <NotLoggedIn/>;
   }
 
 
   return (
     <>
+      <LoadingModal isOpen={isLoading}/>
       <ToastContainer
         position="top-right"
         autoClose={5000}

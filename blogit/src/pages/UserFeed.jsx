@@ -7,6 +7,7 @@ import { useTitle } from '../services/useTitle';
 import BlogItem from './BlogItem';
 import NotLoggedIn from './NotLoggedIn';
 import { AuthContext } from '../contexts/AuthContext';
+import LoadingModal from '../components/LoadingModal';
 
 const UserFeed = () => {
   const [blogs, setBlogs] = useState([]);
@@ -43,54 +44,49 @@ const UserFeed = () => {
     navigate(`/blog/${slug}`); // Navigate to blog details page with blog slug
   };
 
-  if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: '50vh' }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (!authToken) {
+  if (!authToken && !loading) {
     return <NotLoggedIn/>;
   }
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography 
-        variant="h3" 
-        gutterBottom 
-        sx={{ 
-          marginBottom: '30px', 
-          fontWeight: 800, 
-          fontFamily: '"Besley", serif',
-          textAlign: 'center'
-        }}
-      >
-        Feed
-      </Typography>
-
-      {blogs.length === 0 ? (
-        <Typography>No blogs found from your following. Start following creators to see their blogs here!</Typography>
-      ) : (
-        <Grid2 
-          container 
-          spacing={3} 
-          justifyContent="center" 
-          alignItems="center"
+    <>
+      <LoadingModal isOpen={loading}/>
+      <Box sx={{ p: 3 }}>
+        <Typography 
+          variant="h3" 
+          gutterBottom 
+          sx={{ 
+            marginBottom: '30px', 
+            fontWeight: 800, 
+            fontFamily: '"Besley", serif',
+            textAlign: 'center'
+          }}
         >
-          {blogs.map((post, index) => (
-            <Grid2 item xs={12} sm={6} md={4} key={post.slug}>
-              <BlogItem
-                post={post}
-                isEven={index % 2 === 0} // Pass 'isEven' based on the index
-                sx={{ borderRadius: '10px', boxShadow: 3 }}
-              />
-            </Grid2>
-          ))}
-        </Grid2>
-      )}
-    </Box>
+          Feed
+        </Typography>
+
+        {blogs.length === 0 ? (
+          <Typography>No blogs found from your following. Start following creators to see their blogs here!</Typography>
+        ) : (
+          <Grid2 
+            container 
+            spacing={3} 
+            justifyContent="center" 
+            alignItems="center"
+          >
+            {blogs.map((post, index) => (
+              <Grid2 item xs={12} sm={6} md={4} key={post.slug}>
+                <BlogItem
+                  post={post}
+                  isEven={index % 2 === 0} // Pass 'isEven' based on the index
+                  sx={{ borderRadius: '10px', boxShadow: 3 }}
+                />
+              </Grid2>
+            ))}
+          </Grid2>
+        )}
+      </Box>
+    </>
   );
 };
 

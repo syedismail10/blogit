@@ -8,11 +8,12 @@ import { useNavigate } from 'react-router-dom';
 import { VITE_API_URL } from '../config';
 import { useTitle } from '../services/useTitle';
 import NotLoggedIn from './NotLoggedIn';
+import LoadingModal from '../components/LoadingModal';
 
 const UserProfile = () => {
   const authToken = localStorage.getItem('authToken'); // Get authToken from localStorage directly
   const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
@@ -48,15 +49,6 @@ const UserProfile = () => {
     navigate('/edit')
   }
 
-  // Show a loading spinner while fetching data
-  if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
-        <CircularProgress />
-      </Box>
-    );
-  }
-
   if (!authToken) {
     return <NotLoggedIn/>;
   }
@@ -74,22 +66,25 @@ const UserProfile = () => {
 
   // Display user details
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        User Profile
-      </Typography>
-      {userData && (
-        <>
-          <Avatar
-            alt={userData.fullName}
-            src={userData.profileImg || ''}
-            sx={{ width: 100, height: 100, mb: 2 }}
-          />
-          <Typography variant="h6">Full Name: {userData.fullName}</Typography>
-        </>
-      )}
-      <Button variant='contained' onClick={handleProfileClick}>Edit</Button>
-    </Box>
+    <>
+      <LoadingModal isOpen={isLoading}/>
+      <Box sx={{ p: 3 }}>
+        <Typography variant="h4" gutterBottom>
+          User Profile
+        </Typography>
+        {userData && (
+          <>
+            <Avatar
+              alt={userData.fullName}
+              src={userData.profileImg || ''}
+              sx={{ width: 100, height: 100, mb: 2 }}
+            />
+            <Typography variant="h6">Full Name: {userData.fullName}</Typography>
+          </>
+        )}
+        <Button variant='contained' onClick={handleProfileClick}>Edit</Button>
+      </Box>
+    </>
   );
 };
 

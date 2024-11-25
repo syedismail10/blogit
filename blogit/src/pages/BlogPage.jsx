@@ -16,6 +16,7 @@ import { useTitle } from '../services/useTitle';
 import { useThemeContext } from '../contexts/ThemeContext';
 import NotLoggedIn from './NotLoggedIn';
 import { AuthContext } from '../contexts/AuthContext';
+import LoadingModal from '../components/LoadingModal';
 
 const BlogDetail = () => {
   const { slug } = useParams();
@@ -32,7 +33,6 @@ const BlogDetail = () => {
 
   // Fetch blog details
   const fetchBlog = useCallback(async () => {
-    setLoading(true);
     const authToken = localStorage.getItem('authToken');
     try {
       const response = await axios.get(`${VITE_API_URL}/blog/${slug}`, {
@@ -42,8 +42,6 @@ const BlogDetail = () => {
       setVotingStatus(response.data.data.votingStatus);
     } catch (error) {
       console.error('Error fetching blog:', error);
-    } finally {
-      setLoading(false);
     }
   }, [slug]);
 
@@ -127,100 +125,107 @@ const BlogDetail = () => {
 
   // Fetch data on component mount
   useEffect(() => {
-    fetchBlog();
-    fetchLoggedInUserSlug();
+    const fetchData = async () => {
+      setLoading(true); // Start loading
+  
+      try {
+        await Promise.all([fetchBlog(), fetchLoggedInUserSlug()]); // Fetch all data
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false); // Stop loading
+      }
+    };
+  
+    fetchData();
   }, [fetchBlog, fetchLoggedInUserSlug]);
+  
 
-  if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: '50vh' }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (!authToken) {
+  if (!authToken && !loading) {
     return <NotLoggedIn/>;
   }
 
-  if (!blog) {
+  if (!blog && !loading) {
     return <Typography variant="h6">Blog not found.</Typography>;
   }
 
   return (
-    <Box sx={{ p: 3 }} data-color-mode={darkMode ? 'dark' : 'light'}>
-      {/* Blog Title */}
-      <Typography variant="h3" gutterBottom>
-        {blog.title}
-      </Typography>
+    <>
+      <LoadingModal isOpen={loading}/>
+      <Box sx={{ p: 3 }} data-color-mode={darkMode ? 'dark' : 'light'}>
+        {/* Blog Title */}
+        <Typography variant="h3" gutterBottom>
+          {blog?.title}
+        </Typography>
 
-      {/* Blog Media */}
-      {blog.media && (
-        <CardMedia
-          component="img"
-          height="400"
-          image={blog.media}
-          alt={blog.title}
-          sx={{ marginBottom: 3 }}
-        />
-      )}
+        {/* Blog Media */}
+        {blog?.media && (
+          <CardMedia
+            component="img"
+            height="400"
+            image={blog.media}
+            alt={blog.title}
+            sx={{ marginBottom: 3 }}
+          />
+        )}
 
-      {/* Blog Author and Date */}
-      <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-        By{' '}
-        <MuiLink
-          component={Link}
-          to={`/user/${blog.user_slug}`}
-          sx={{
-            textDecoration: 'none',
-            color: 'inherit',
-            borderBottom: '1px solid transparent',
-            '&:hover': { borderBottom: '1px solid' },
-          }}
-        >
-          {blog.user.fullName}
-        </MuiLink>{' '}
-        | {new Date(blog.createdAt).toLocaleDateString()}
-      </Typography>
+        {/* Blog Author and Date */}
+        <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+          By{' '}
+          <MuiLink
+            component={Link}
+            to={`/user/${blog?.user_slug}`}
+            sx={{
+              textDecoration: 'none',
+              color: 'inherit',
+              borderBottom: '1px solid transparent',
+              '&:hover': { borderBottom: '1px solid' },
+            }}
+          >
+            {blog?.user.fullName}
+          </MuiLink>{' '}
+          | {new Date(blog?.createdAt).toLocaleDateString()}
+        </Typography>
 
-      {/* Blog Content */}
-      <MDEditor.Markdown source={blog.description} />
+        {/* Blog Content */}
+        <MDEditor.Markdown source={blog?.description} />
 
-      {/* Voting Buttons */}
-      <Box display="flex" gap={2} sx={{ my: 2 }}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => handleVote('upvote')}
-          disabled={voting}
-        >
-          Upvote {blog.upvotes}
-        </Button>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => handleVote('downvote')}
-          disabled={voting}
-        >
-          Downvote {blog.downvotes}
-        </Button>
+        {/* Voting Buttons */}
+        <Box display="flex" gap={2} sx={{ my: 2 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => handleVote('upvote')}
+            disabled={voting}
+          >
+            Upvote {blog?.upvotes}
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => handleVote('downvote')}
+            disabled={voting}
+          >
+            Downvote {blog?.downvotes}
+          </Button>
+        </Box>
+
+        {/* Delete Button for Blog Owner */}
+        {loggedInUserSlug === blog?.user.slug && (
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={handleDeleteBlog}
+            sx={{ my: 2 }}
+          >
+            Delete Blog
+          </Button>
+        )}
+
+        {/* Comments Section */}
+        <Comments blogSlug={slug} blogComments={blog?.comments} />
       </Box>
-
-      {/* Delete Button for Blog Owner */}
-      {loggedInUserSlug === blog.user.slug && (
-        <Button
-          variant="outlined"
-          color="error"
-          onClick={handleDeleteBlog}
-          sx={{ my: 2 }}
-        >
-          Delete Blog
-        </Button>
-      )}
-
-      {/* Comments Section */}
-      <Comments blogSlug={slug} blogComments={blog.comments} />
-    </Box>
+    </>
   );
 };
 

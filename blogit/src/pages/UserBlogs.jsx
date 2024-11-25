@@ -6,6 +6,7 @@ import { VITE_API_URL } from '../config';
 import { useTitle } from '../services/useTitle';
 import BlogItem from './BlogItem';
 import NotLoggedIn from './NotLoggedIn';
+import LoadingModal from '../components/LoadingModal';
 
 const UserBlogs = () => {
   useTitle("User Blogs | BlogIt");
@@ -137,94 +138,88 @@ const UserBlogs = () => {
       console.error("Error following/unfollowing user:", error);
     }
   };
-  
 
-  if (userLoading || loading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: '50vh' }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (!authToken) {
+  if (!authToken && !(userLoading || loading)) {
     return <NotLoggedIn/>;
   }
 
   return (
-    <Box sx={{ p: 3 }}>
-      {/* User Information */}
-      {user && (
-        <Box display="flex" alignItems="center" sx={{ mb: 4 }}>
-          <Avatar
-            src={user.profileImg}
-            alt={user.fullName}
-            sx={{ width: 56, height: 56, mr: 2 }}
-          />
-          <Box>
-            <Typography variant="h5" sx={{fontFamily: '"Besley", serif'}}>{user.fullName}</Typography>
-            <Typography variant="body2" color="text.secondary">
-              Followers: {user.followers} | Following: {user.following}
-            </Typography>
+    <>
+      <LoadingModal isOpen={userLoading || loading}/>
+      <Box sx={{ p: 3 }}>
+        {/* User Information */}
+        {user && (
+          <Box display="flex" alignItems="center" sx={{ mb: 4 }}>
+            <Avatar
+              src={user.profileImg}
+              alt={user.fullName}
+              sx={{ width: 56, height: 56, mr: 2 }}
+            />
+            <Box>
+              <Typography variant="h5" sx={{fontFamily: '"Besley", serif'}}>{user.fullName}</Typography>
+              <Typography variant="body2" color="text.secondary">
+                Followers: {user.followers} | Following: {user.following}
+              </Typography>
+            </Box>
+
+            {/* Follow/Unfollow Button */}
+            {!isSelf && (
+              <Button
+                variant={isFollowing ? 'contained' : 'outlined'}
+                onClick={handleFollowToggle}
+                sx={{ ml: 3 }}
+              >
+                {isFollowing ? 'Unfollow' : 'Follow'}
+              </Button>
+            )}
           </Box>
+        )}
 
-          {/* Follow/Unfollow Button */}
-          {!isSelf && (
-            <Button
-              variant={isFollowing ? 'contained' : 'outlined'}
-              onClick={handleFollowToggle}
-              sx={{ ml: 3 }}
-            >
-              {isFollowing ? 'Unfollow' : 'Follow'}
-            </Button>
-          )}
-        </Box>
-      )}
-
-      {/* User Blogs */}
-      <Typography 
-        variant="h3" 
-        gutterBottom 
-        sx={{ 
-          marginBottom: '30px', 
-          fontWeight: 800, 
-          fontFamily: '"Besley", serif',
-          textAlign: 'center'
-        }}
-      >
-        Blogs by {user?.fullName || user_slug}
-      </Typography>
-
-      {blogs.length === 0 ? (
-        <Typography variant="h6">No blogs found for this user.</Typography>
-      ) : (
-        <Grid2 
-          container 
-          spacing={3} 
-          justifyContent="center" 
-          alignItems="center"
+        {/* User Blogs */}
+        <Typography 
+          variant="h3" 
+          gutterBottom 
+          sx={{ 
+            marginBottom: '30px', 
+            fontWeight: 800, 
+            fontFamily: '"Besley", serif',
+            textAlign: 'center'
+          }}
         >
-          {blogs.map((post, index) => (
-            <Grid2 item xs={12} sm={6} md={4} key={post.slug}>
-              <BlogItem
-                post={post}
-                isEven={index % 2 === 0} // Pass 'isEven' based on the index
-                sx={{ borderRadius: '10px', boxShadow: 3 }}
-              />
-            </Grid2>
-          ))}
-        </Grid2>
-      )}
+          Blogs by {user?.fullName || user_slug}
+        </Typography>
 
-      {/* Pagination Controls */}
-      <Box display="flex" justifyContent="center" sx={{ mt: 2 }}>
-        <Pagination 
-          page={page} 
-          onChange={handlePageChange} 
-          color="primary"
-        />
+        {blogs.length === 0 ? (
+          <Typography variant="h6">No blogs found for this user.</Typography>
+        ) : (
+          <Grid2 
+            container 
+            spacing={3} 
+            justifyContent="center" 
+            alignItems="center"
+          >
+            {blogs.map((post, index) => (
+              <Grid2 item xs={12} sm={6} md={4} key={post.slug}>
+                <BlogItem
+                  post={post}
+                  isEven={index % 2 === 0} // Pass 'isEven' based on the index
+                  sx={{ borderRadius: '10px', boxShadow: 3 }}
+                />
+              </Grid2>
+            ))}
+          </Grid2>
+        )}
+
+        {/* Pagination Controls */}
+        <Box display="flex" justifyContent="center" sx={{ mt: 2 }}>
+          <Pagination 
+            page={page} 
+            onChange={handlePageChange} 
+            color="primary"
+          />
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 

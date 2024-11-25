@@ -6,12 +6,13 @@ import { VITE_API_URL } from '../config';
 import { useTitle } from '../services/useTitle';
 import NotLoggedIn from './NotLoggedIn';
 import { AuthContext } from '../contexts/AuthContext';
+import LoadingModal from '../components/LoadingModal';
 
 const BlogList = () => {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [isLastPage, setIsLastPage] = useState(false);  // To check if it's the last page
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const postsPerPage = 5;  // Set the maximum number of posts per page
   const { authToken } = useContext(AuthContext);
 
@@ -60,74 +61,77 @@ const BlogList = () => {
     }
   };
 
-  if (!authToken) {
+  if (!authToken && !loading) {
     return <NotLoggedIn/>;
   }
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography 
-        variant="h3" 
-        gutterBottom 
-        sx={{ 
-          marginBottom: '50px', 
-          fontWeight: 800, 
-          fontFamily: '"Besley", serif',
-          textAlign: 'center'
-        }}
-      >
-        Blogs
-      </Typography>
-
-
-      {loading ? (
-        <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: '50vh' }}>
-          <CircularProgress color="secondary" size={60} />
-        </Box>
-      ) : posts.length === 0 ? (
-        <Typography align="center" variant="h6" sx={{ color: 'gray', fontStyle: 'italic' }}>
-          No posts available.
+    <>
+      <LoadingModal isOpen={loading}/>
+      <Box sx={{ p: 3 }}>
+        <Typography 
+          variant="h3" 
+          gutterBottom 
+          sx={{ 
+            marginBottom: '50px', 
+            fontWeight: 800, 
+            fontFamily: '"Besley", serif',
+            textAlign: 'center'
+          }}
+        >
+          Blogs
         </Typography>
-      ) : (
-        <Grid2 
-          container 
-          spacing={3} 
-          justifyContent="center" 
-          alignItems="center"
-        >
-          {posts.map((post, index) => (
-            <Grid2 item xs={12} sm={6} md={4}key={post.slug}>
-              <BlogItem
-                post={post}
-                isEven={index % 2 === 0} // Pass 'isEven' based on the index
-                sx={{ borderRadius: '10px', boxShadow: 3 }}
-              />
-            </Grid2>
-          ))}
-        </Grid2>
-      )}
 
-      <Box display="flex" justifyContent="center" alignItems="center" sx={{ mt: 4 }}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handlePrevPage}
-          disabled={page === 1}
-          sx={{ mr: 2, px: 3 }}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={handleNextPage}
-          disabled={isLastPage}
-          sx={{ px: 3 }}
-        >
-          Next
-        </Button>
+
+        {loading ? (
+          <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: '50vh' }}>
+            <CircularProgress color="secondary" size={60} />
+          </Box>
+        ) : posts.length === 0 ? (
+          <Typography align="center" variant="h6" sx={{ color: 'gray', fontStyle: 'italic' }}>
+            No posts available.
+          </Typography>
+        ) : (
+          <Grid2 
+            container 
+            spacing={3} 
+            justifyContent="center" 
+            alignItems="center"
+          >
+            {posts.map((post, index) => (
+              <Grid2 item xs={12} sm={6} md={4}key={post.slug}>
+                <BlogItem
+                  post={post}
+                  isEven={index % 2 === 0} // Pass 'isEven' based on the index
+                  sx={{ borderRadius: '10px', boxShadow: 3 }}
+                />
+              </Grid2>
+            ))}
+          </Grid2>
+        )}
+
+        <Box display="flex" justifyContent="center" alignItems="center" sx={{ mt: 4 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handlePrevPage}
+            disabled={page === 1}
+            sx={{ mr: 2, px: 3 }}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleNextPage}
+            disabled={isLastPage}
+            sx={{ px: 3 }}
+          >
+            Next
+          </Button>
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 
