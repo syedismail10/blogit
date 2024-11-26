@@ -149,17 +149,21 @@ const BlogDetail = () => {
     return <Typography variant="h6">Blog not found.</Typography>;
   }
 
+  if (loading) {
+    return <div></div>;
+  }
+
   return (
     <>
       <LoadingModal isOpen={loading}/>
       <Box sx={{ p: 3 }} data-color-mode={darkMode ? 'dark' : 'light'}>
         {/* Blog Title */}
         <Typography variant="h3" gutterBottom>
-          {blog?.title}
+          {blog.title}
         </Typography>
 
         {/* Blog Media */}
-        {blog?.media && (
+        {blog.media && (
           <CardMedia
             component="img"
             height="400"
@@ -174,7 +178,7 @@ const BlogDetail = () => {
           By{' '}
           <MuiLink
             component={Link}
-            to={`/user/${blog?.user_slug}`}
+            to={`/user/${blog.user_slug}`}
             sx={{
               textDecoration: 'none',
               color: 'inherit',
@@ -182,13 +186,13 @@ const BlogDetail = () => {
               '&:hover': { borderBottom: '1px solid' },
             }}
           >
-            {blog?.user.fullName}
+            {blog.user.fullName}
           </MuiLink>{' '}
-          | {new Date(blog?.createdAt).toLocaleDateString()}
+          | {new Date(blog.createdAt).toLocaleDateString()}
         </Typography>
 
         {/* Blog Content */}
-        <MDEditor.Markdown source={blog?.description} />
+        <MDEditor.Markdown source={blog.description} />
 
         {/* Voting Buttons */}
         <Box display="flex" gap={2} sx={{ my: 2 }}>
@@ -198,7 +202,7 @@ const BlogDetail = () => {
             onClick={() => handleVote('upvote')}
             disabled={voting}
           >
-            Upvote {blog?.upvotes}
+            Upvote {blog.upvotes}
           </Button>
           <Button
             variant="contained"
@@ -206,12 +210,12 @@ const BlogDetail = () => {
             onClick={() => handleVote('downvote')}
             disabled={voting}
           >
-            Downvote {blog?.downvotes}
+            Downvote {blog.downvotes}
           </Button>
         </Box>
 
         {/* Delete Button for Blog Owner */}
-        {loggedInUserSlug === blog?.user.slug && (
+        {loggedInUserSlug === blog.user.slug && (
           <Button
             variant="outlined"
             color="error"
@@ -223,7 +227,7 @@ const BlogDetail = () => {
         )}
 
         {/* Comments Section */}
-        <Comments blogSlug={slug} blogComments={blog?.comments} />
+        <Comments blogSlug={slug} blogComments={blog.comments} />
       </Box>
     </>
   );
