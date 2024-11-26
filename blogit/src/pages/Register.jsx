@@ -7,6 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { VITE_API_URL } from '../config';
 import { useTitle } from '../services/useTitle';
 import { useThemeContext } from '../contexts/ThemeContext';
+import LoadingModal from '../components/LoadingModal';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +15,7 @@ const Register = () => {
     email: '',
     password: '',
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -32,6 +34,7 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
   
     try {
       const response = await axios.post(
@@ -64,12 +67,16 @@ const Register = () => {
         console.error('Error:', error.message);
         toast.error('Registration failed');
       }
+    } finally {
+      setIsLoading(false);
     }
+    setIsLoading(false);
   };
   
 
   const handleOtpVerification = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       // Verify OTP by making another API call
       const response = await axios.post(`${VITE_API_URL}/user/verify-otp`, {
@@ -87,11 +94,15 @@ const Register = () => {
     } catch (error) {
       console.error('Error during OTP verification:', error);
       toast.error('OTP verification failed');
+    } finally {
+      setIsLoading(false);
     }
+    setIsLoading(false);
   };
 
   return (
     <>
+      <LoadingModal isOpen={isLoading}/>
       <ToastContainer
         position="top-right"
         autoClose={5000}

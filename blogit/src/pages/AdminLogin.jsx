@@ -7,10 +7,12 @@ import { useTitle } from '../services/useTitle';
 import { useThemeContext } from '../contexts/ThemeContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import LoadingModal from '../components/LoadingModal';
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [otp, setOtp] = useState(''); // State for OTP
   const [isOtpSent, setIsOtpSent] = useState(false); // Track if OTP is sent
   const { login } = useContext(AuthContext); // Get the login function from AuthContext
@@ -21,6 +23,7 @@ const AdminLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
         const response = await fetch(`${VITE_API_URL}/admin/login`, {
@@ -59,12 +62,16 @@ const AdminLogin = () => {
      catch (error) {
         console.error('Login error', error);
         toast.error('An error occurred while logging in. Please try again later.');
+    } finally {
+      setIsLoading(false);
     }
-};
+    setIsLoading(false);
+  };
 
 
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
       const response = await fetch(`${VITE_API_URL}/user/verify-otp`, {
@@ -94,11 +101,15 @@ const AdminLogin = () => {
       }
     } catch (error) {
       console.error('OTP verification error', error);
+    } finally {
+      setIsLoading(false);
     }
+    setIsLoading(false);
   };
 
   return (
     <>
+      <LoadingModal isOpen={isLoading}/>
       <ToastContainer
         position="top-right"
         autoClose={5000}
